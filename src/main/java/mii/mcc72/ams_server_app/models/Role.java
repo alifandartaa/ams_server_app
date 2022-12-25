@@ -16,7 +16,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
