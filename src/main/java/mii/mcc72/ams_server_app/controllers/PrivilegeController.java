@@ -29,13 +29,13 @@ public class PrivilegeController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<Privilege>> create(@RequestBody PrivilegeDTO roleDTO, Errors errors){
-        return privilegeService.create(roleDTO, errors);
+    public ResponseEntity<ResponseData<Privilege>> create(@RequestBody PrivilegeDTO privilegeDTO, Errors errors){
+        return privilegeService.create(privilegeDTO, errors);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Privilege>> update(@PathVariable int id, @RequestBody PrivilegeDTO roleDTO, Errors errors){
-        return privilegeService.update(roleDTO, id, errors);
+    public ResponseEntity<ResponseData<Privilege>> update(@PathVariable int id, @RequestBody PrivilegeDTO privilegeDTO, Errors errors){
+        return privilegeService.update(privilegeDTO, id, errors);
     }
 
     @DeleteMapping("/{id}")
