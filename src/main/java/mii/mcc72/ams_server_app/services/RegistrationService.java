@@ -6,8 +6,8 @@ package mii.mcc72.ams_server_app.services;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.AppUser;
-import mii.mcc72.ams_server_app.models.AppUserRole;
+import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationRequest;
 import mii.mcc72.ams_server_app.utils.EmailSender;
@@ -22,10 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class RegistrationService {
 
-    private final AppUserService appUserService;
+    private final UserService userService;
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final Role role;
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.
@@ -35,13 +36,13 @@ public class RegistrationService {
             throw new IllegalStateException("email not valid");
         }
 
-        String token = appUserService.signUpUser(
-                new AppUser(
+        String token = userService.signUpUser(
+                new User(
                         request.getFirstName(),
                         request.getLastName(),
                         request.getEmail(),
                         request.getPassword(),
-                        AppUserRole.USER
+                        role.getName()
                 )
         );
 
@@ -71,8 +72,8 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        appUserService.enableAppUser(
-                confirmationToken.getAppUser().getEmail());
+        userService.enableUser(
+                confirmationToken.getUser().getEmail());
         return "confirmed";
     }
 

@@ -6,7 +6,7 @@ package mii.mcc72.ams_server_app.repos;
 
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
-import mii.mcc72.ams_server_app.models.AppUser;
+import mii.mcc72.ams_server_app.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,15 +18,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 @Transactional(readOnly = true)
-public interface AppUserRepository
-        extends JpaRepository<AppUser, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<AppUser> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     @Transactional
     @Modifying
-    @Query("UPDATE AppUser a " +
-            "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableAppUser(String email);
+    @Query("UPDATE User a " + "SET a.enabled = TRUE WHERE a.email = ?1")
+    int enableUser(String email);
 
 }
