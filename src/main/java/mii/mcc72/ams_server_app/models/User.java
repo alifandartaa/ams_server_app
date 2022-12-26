@@ -4,8 +4,6 @@
  */
 package mii.mcc72.ams_server_app.models;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,13 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -44,10 +41,15 @@ public class User {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false)
-    private String email;
+//    @Column(nullable = false, unique=true)
+//    private String email;
 
     private Boolean isEnabled = true;
+    
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private Employee employee;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -60,4 +62,10 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;
+    
+    public User (String username, String password){
+        this.username = username;
+        this.password = password;
+//        this.roles = (List<Role>) roles;
+    }
 }

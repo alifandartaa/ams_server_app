@@ -5,16 +5,25 @@
 package mii.mcc72.ams_server_app.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
+import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.repos.EmployeeRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import mii.mcc72.ams_server_app.repos.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  *
@@ -24,24 +33,29 @@ import mii.mcc72.ams_server_app.repos.UserRepository;
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
-    private final static String USER_NOT_FOUND_MSG =
-            "user with email %s not found";
+    private final static String USER_NOT_FOUND_MSG
+            = "user with email %s not found";
 
     private final UserRepository userRepository;
+    private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException(
-                                String.format(USER_NOT_FOUND_MSG, email)));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found!!!")
+                );
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()));
+//                .orElseThrow(
+//                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", email)));
     }
 
     public String signUpUser(User user) {
         boolean userExists = userRepository
-                .findByEmail(user.getEmail())
+                .findByUsername(user.getUsername())
                 .isPresent();
 
         if (userExists) {
@@ -71,11 +85,18 @@ public class UserService implements UserDetailsService {
                 confirmationToken);
 
 //        TODO: SEND EMAIL
-
         return token;
     }
 
-    public int enableAppUser(String email) {
-        return userRepository.enableUser(email);
+    public int enableUser(String email) {
+        return employeeRepository.enableUser(email);
+    }
+
+    public List<GrantedAuthority> getAuthorities(List<Role> roles){
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 }

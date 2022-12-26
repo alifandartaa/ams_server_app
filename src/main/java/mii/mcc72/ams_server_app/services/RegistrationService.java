@@ -38,18 +38,19 @@ public class RegistrationService {
 
         String token = userService.signUpUser(
                 new User(
-                        request.getFirstName(),
-                        request.getLastName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        role.getName()
+//                        request.getFirstName(),
+//                        request.getLastName(),
+//                        request.getEmail(),
+                        request.getUsername(),
+                        request.getPassword()
+                        
                 )
         );
 
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
+        String link = "http://localhost:8088/api/v1/registration/confirm?token=" + token;
         emailSender.send(
                 request.getEmail(),
-                buildEmail(request.getFirstName(), link));
+                buildEmail(request.getUsername(), link));
 
         return token;
     }
@@ -73,7 +74,7 @@ public class RegistrationService {
 
         confirmationTokenService.setConfirmedAt(token);
         userService.enableUser(
-                confirmationToken.getUser().getEmail());
+                confirmationToken.getUser().getUsername());
         return "confirmed";
     }
 

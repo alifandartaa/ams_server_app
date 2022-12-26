@@ -5,16 +5,15 @@
 package mii.mcc72.ams_server_app.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.sql.Date;
-import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import lombok.AllArgsConstructor;
@@ -47,14 +46,14 @@ public class Employee {
     @Column(length = 50)
     private String phone_number;
 
-//   //FK
-//    @ManyToOne
-//    @JoinColumn(name = "department")
-//    private Department department;
+   //FK
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "department")
+    private Department department;
      
     //FK
     @JsonIgnore
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "employee")
     @PrimaryKeyJoinColumn
     private User user;
        
