@@ -1,12 +1,37 @@
+
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package mii.mcc72.ams_server_app.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.util.List;
+
+/**
+ *
+ * @author bintang mada, Alif Andarta
+ */
+
+
+
 
 @Entity
 @Data
@@ -15,32 +40,33 @@ import java.util.List;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(nullable = false, length = 6)
     private int id;
 
-    @Column(name = "first_name", nullable = false, length = 50)
+    @Column(name = "first_name", length = 50)
     private String firstName;
-
-    @Column(name = "last_name", nullable = false, length = 50)
+    
+    @Column(name = "last_name", length = 55)
     private String lastName;
-
-    @Column(nullable = false, unique = true, length = 50)
+    
+    @Column(length = 50, unique = true)
     private String email;
-
-    @Column(name = "phone_number", nullable = false, length = 50)
+    
+    @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "department")
     private Department department;
-
+     
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "employee")
+    @PrimaryKeyJoinColumn
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
-    private List<Report> reports;
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
-    private List<Asset> assets;
-
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
-    private List<History> histories;
+    private User user;
+       
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "employee_id")
+//    private List<History> histories;
+       
 }
