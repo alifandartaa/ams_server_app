@@ -13,7 +13,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class Report {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "date_accident", nullable = false)
@@ -31,4 +30,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Employee employee;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "id")
+    private History history;
 }

@@ -35,4 +35,12 @@ public class Employee {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
     private List<Report> reports;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private List<Asset> assets;
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private List<History> histories;
 }

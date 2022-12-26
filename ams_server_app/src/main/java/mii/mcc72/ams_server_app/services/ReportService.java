@@ -58,6 +58,7 @@ public class ReportService {
         report.setPenalty(reportDTO.getPenalty());
         report.setEmployee(employeeService.getById(reportDTO.getAdminId()));
         responseData.setPayload(reportRepo.save(report));
+
         return ResponseEntity.ok(responseData);
     }
 
