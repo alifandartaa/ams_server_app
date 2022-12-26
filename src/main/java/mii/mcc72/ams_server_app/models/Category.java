@@ -1,5 +1,6 @@
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -19,11 +21,7 @@ public class Role {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "role_privilege",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "privilege_id")
-    )
-    private List<Privilege> privileges;
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    private List<Asset> assets;
 }

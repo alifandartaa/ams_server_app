@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -16,14 +17,22 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 /**
  *
  * @author bintang mada, Alif Andarta
  */
+
+
+
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -31,6 +40,7 @@ import lombok.NoArgsConstructor;
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(nullable = false, length = 6)
     private int id;
 
