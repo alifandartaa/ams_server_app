@@ -4,6 +4,7 @@
  */
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -35,6 +36,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(length = 6)
     private Integer id;
 
     @Column(nullable = false)
@@ -48,9 +50,11 @@ public class User {
 
     private Boolean isEnabled = false;
     
-    @OneToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -61,6 +65,7 @@ public class User {
     )
     private List<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;

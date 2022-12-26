@@ -31,8 +31,7 @@ import lombok.NoArgsConstructor;
 public class Employee {
     @Id //Primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 6)
-    private int id;
+    private Integer id;
 
     @Column(length = 50)
     private String first_name;
@@ -52,9 +51,9 @@ public class Employee {
     private Department department;
      
     //FK
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "employee")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "employee")
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private User user;
        
 //    @JsonIgnore

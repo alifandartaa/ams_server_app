@@ -31,11 +31,9 @@ private final UserService appUserService;
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/v*/registration/**")
+                    .antMatchers("/api/registration/**")
                     .permitAll()
-                .anyRequest()
-                .authenticated().and()
-                .formLogin();
+                .anyRequest().permitAll();
     }
 
     @Override
