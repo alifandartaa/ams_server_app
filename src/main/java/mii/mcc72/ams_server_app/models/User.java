@@ -4,7 +4,9 @@
  */
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,7 +46,7 @@ public class User {
     @Column(nullable = false, unique=true)
     private String email;
 
-    private Boolean isEnabled = true;
+    private Boolean isEnabled = false;
     
     @OneToOne
     @MapsId

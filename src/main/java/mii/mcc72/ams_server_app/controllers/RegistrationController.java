@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author bintang mada
  */
 @RestController
-@RequestMapping(path = "api/v1/registration")
+@RequestMapping(path = "registration")
 @AllArgsConstructor
 public class RegistrationController {
 
