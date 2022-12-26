@@ -26,7 +26,6 @@ public class RegistrationService {
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
-    private final Role role;
 
     public String register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.
@@ -42,7 +41,8 @@ public class RegistrationService {
 //                        request.getLastName(),
 //                        request.getEmail(),
                         request.getUsername(),
-                        request.getPassword()
+                        request.getPassword(),
+                        request.getEmail()
                         
                 )
         );

@@ -17,13 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
  * @author bintang mada
  */
 public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
-    Optional<User> findById(String id);
-    
-    Optional<User> findByEmail(String email);
-    
-    
-    @Transactional
-    @Modifying
-    @Query("UPDATE User a " + "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableUser(String email);
+    Optional<Employee> findById(Integer id);
+
+    Optional<Employee> findByEmail(String email);
+
+    Boolean existsByEmail(String email);
 }

@@ -41,8 +41,8 @@ public class User {
     @Column(nullable = false)
     private String password;
     
-//    @Column(nullable = false, unique=true)
-//    private String email;
+    @Column(nullable = false, unique=true)
+    private String email;
 
     private Boolean isEnabled = true;
     
@@ -63,9 +63,10 @@ public class User {
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;
     
-    public User (String username, String password){
+    public User (String username, String password, String email){
         this.username = username;
         this.password = password;
+        this.email = email;
 //        this.roles = (List<Role>) roles;
     }
 }

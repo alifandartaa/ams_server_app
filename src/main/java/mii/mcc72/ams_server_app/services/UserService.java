@@ -88,8 +88,8 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
-    public int enableUser(String email) {
-        return employeeRepository.enableUser(email);
+    public int enableUser(String username) {
+        return userRepository.enableUser(username);
     }
 
     public List<GrantedAuthority> getAuthorities(List<Role> roles){
