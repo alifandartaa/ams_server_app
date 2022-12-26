@@ -4,6 +4,7 @@
  */
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 
 /**
  *
- * @author bintang mada
+ * @author bintang mada, Alif Andarta
  */
 @Entity
 @Data
@@ -35,7 +36,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id", length = 60)
+    private int id;
 
     @Column(nullable = false)
     private String username;
@@ -47,10 +49,12 @@ public class User {
     private String email;
 
     private Boolean isEnabled = false;
-    
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -59,16 +63,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
     private List<Role> roles;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;
-    
-    public User (String username, String password, String email){
-        this.username = username;
-        this.password = password;
-        this.email = email;
-//        this.roles = (List<Role>) roles;
-    }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
+import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.repos.EmployeeRepository;
@@ -68,8 +69,7 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder
                 .encode(user.getPassword());
 
-        user.setPassword(encodedPassword);
-
+       user.setPassword(encodedPassword);
         userRepository.save(user);
 
         String token = UUID.randomUUID().toString();

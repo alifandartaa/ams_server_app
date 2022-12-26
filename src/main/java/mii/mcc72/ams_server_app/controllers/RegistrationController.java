@@ -5,7 +5,7 @@
 package mii.mcc72.ams_server_app.controllers;
 
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.dto.RegistrationRequest;
+import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.services.RegistrationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author bintang mada
+ * @author bintang mada, Alif Andarta
  */
 @RestController
 @RequestMapping(path = "registration")
@@ -26,7 +26,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest request) {
+    public String register(@RequestBody RegistrationDTO request) {
         return registrationService.register(request);
     }
 

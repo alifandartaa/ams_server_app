@@ -22,39 +22,37 @@ import lombok.NoArgsConstructor;
 
 /**
  *
- * @author bintang mada
+ * @author bintang mada, Alif Andarta
  */
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee {
-    @Id //Primary key
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(length = 6)
+    @Column(nullable = false, length = 6)
     private int id;
 
-    @Column(length = 50)
-    private String first_name;
+    @Column(name = "first_name", length = 50)
+    private String firstName;
     
-    @Column(length = 55)
-    private String last_name;
+    @Column(name = "last_name", length = 55)
+    private String lastName;
     
     @Column(length = 50, unique = true)
     private String email;
     
-    @Column(length = 50)
-    private String phone_number;
+    @Column(name = "phone_number", length = 50)
+    private String phoneNumber;
 
-   //FK
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "department")
     private Department department;
      
-    //FK
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "employee")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "employee")
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private User user;
        
 //    @JsonIgnore

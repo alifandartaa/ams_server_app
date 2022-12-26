@@ -5,18 +5,18 @@
 package mii.mcc72.ams_server_app.services;
 
 import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
+import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.User;
-import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
-import mii.mcc72.ams_server_app.models.dto.RegistrationRequest;
+import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
- * @author bintang mada
+ * @author bintang mada, Alif Andarta
  */
 @Service
 @AllArgsConstructor
@@ -27,30 +27,39 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public String register(RegistrationRequest request) {
+    public String register(RegistrationDTO registrationDTO) {
         boolean isValidEmail = emailValidator.
-                test(request.getEmail());
+                test(registrationDTO.getEmail());
 
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
+        Employee employee = new Employee();
+        employee.setFirstName(registrationDTO.getFirstName());
+        employee.setLastName(registrationDTO.getLastName());
+        employee.setEmail(registrationDTO.getEmail());
+        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        User user = new User();
+        user.setUsername(registrationDTO.getUsername());
+        user.setPassword(registrationDTO.getPassword());
+        user.setEmail(registrationDTO.getEmail());
+        user.setEmployee(employee);
+//        User user = new User();
+//        user.setUsername(request.getUsername());
+//        user.setPassword(request.getPassword());
+//        user.setEmail(request.getEmail());
+//        Employee employee = new Employee();
+//        employee.setFirst_name("dummy");
+//        employee.setLast_name("dummy");
+//        employee.setEmail(request.getEmail());
+//        employee.setPhone_number("081217915595");
+//        user.setEmployee(employee);
+        String token = userService.signUpUser(user);
 
-        String token = userService.signUpUser(
-                new User(
-//                        request.getFirstName(),
-//                        request.getLastName(),
-//                        request.getEmail(),
-                        request.getUsername(),
-                        request.getPassword(),
-                        request.getEmail()
-                        
-                )
-        );
-
-        String link = "http://localhost:8088/api/v1/registration/confirm?token=" + token;
+        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         emailSender.send(
-                request.getEmail(),
-                buildEmail(request.getUsername(), link));
+                registrationDTO.getEmail(),
+                buildEmail(registrationDTO.getUsername(), link));
 
         return token;
     }

@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
- * @author bintang mada
+ * @author bintang mada, Alif Andarta
  */
 @Configuration
 @AllArgsConstructor
@@ -31,11 +31,11 @@ private final UserService appUserService;
         http
                 .csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/v*/registration/**")
-                    .permitAll()
-                .anyRequest()
-                .authenticated().and()
-                .formLogin();
+//                    .antMatchers("/api/v*/registration/**")
+//                    .permitAll()
+                .anyRequest().permitAll();
+//                .authenticated().and()
+//                .formLogin();
     }
 
     @Override
