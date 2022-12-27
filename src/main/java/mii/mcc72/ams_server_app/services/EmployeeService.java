@@ -46,7 +46,6 @@ public class EmployeeService {
         Employee employee = new Employee();
         employee.setFirstName(employeeDTO.getFirstName());
         employee.setLastName(employeeDTO.getLastName());
-        employee.setEmail(employeeDTO.getEmail());
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
         employee.setDepartment(departmentService.getById(employeeDTO.getDepartmentId()));
         responseData.setPayload(employeeRepo.save(employee));
@@ -69,7 +68,6 @@ public class EmployeeService {
         employee.setId(id);
         employee.setFirstName(employeeDTO.getFirstName());
         employee.setLastName(employeeDTO.getLastName());
-        employee.setEmail(employeeDTO.getEmail());
         employee.setPhoneNumber(employeeDTO.getPhoneNumber());
         employee.setDepartment(departmentService.getById(employeeDTO.getDepartmentId()));
         responseData.setPayload(employeeRepo.save(employee));

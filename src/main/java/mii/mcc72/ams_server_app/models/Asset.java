@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mii.mcc72.ams_server_app.util.AssetStatus;
+import mii.mcc72.ams_server_app.utils.AssetStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -40,7 +40,7 @@ public class Asset {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false , name = "approved_status")
-    private AssetStatus status;
+    private AssetStatus approvedStatus;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Employee employee;

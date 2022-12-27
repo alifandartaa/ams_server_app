@@ -5,6 +5,7 @@ import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.services.HistoryService;
+import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,11 @@ public class HistoryController {
         return historyService.getAll();
     }
 
+    @GetMapping("broken")
+    public List<History> getAllBrokenRentAsset(){
+        return historyService.getAllBrokenRentAsset();
+    }
+
     @GetMapping("/{id}")
     public History getById(@PathVariable("id") int id){
         return historyService.getById(id);
@@ -30,12 +36,17 @@ public class HistoryController {
 
     @PostMapping
     public ResponseEntity<ResponseData<History>> create(@RequestBody HistoryDTO history , Errors errors){
-        return historyService.create(history , errors);
+        return historyService.createRentRequest(history , errors);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseData<History>> update(@PathVariable int id, @RequestBody HistoryDTO history , Errors errors){
         return historyService.update(history , id, errors);
+    }
+
+    @PostMapping("/review_rent/{id}")
+    public ResponseEntity<ResponseData<History>> reviewRentRequest(@PathVariable int id, @RequestParam("rent_status") RentStatus rentStatus){
+        return historyService.reviewRentRequest(id, rentStatus);
     }
 
     @DeleteMapping("/{id}")

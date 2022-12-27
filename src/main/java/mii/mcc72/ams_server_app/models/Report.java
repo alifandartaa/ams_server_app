@@ -1,5 +1,7 @@
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,24 +17,25 @@ public class Report {
     @Id
     private int id;
 
-    @Column(name = "date_accident", nullable = false)
+    @Column(name = "date_accident")
     private Date dateAccident;
 
-    @Column(name = "desc_damage", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "desc_damage", columnDefinition = "TEXT")
     private String descDamage;
 
-    @Column(name = "desc_incident", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "desc_incident", columnDefinition = "TEXT")
     private String descIncident;
 
-    @Column(nullable = false)
     private Long penalty;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Employee employee;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
+    @JsonIgnore
     private History history;
 }
