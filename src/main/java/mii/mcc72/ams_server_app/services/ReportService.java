@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.ReportDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.repos.HistoryRepo;
 import mii.mcc72.ams_server_app.repos.ReportRepo;
+import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ReportService {
     private ReportRepo reportRepo;
+    private HistoryRepo historyRepo;
     private EmployeeService employeeService;
 
     public List<Report> getAll(){
@@ -34,35 +37,8 @@ public class ReportService {
         );
     }
 
-    public ResponseEntity<ResponseData<Report>> create(@Valid ReportDTO reportDTO, Errors errors){
-        ResponseData<Report> responseData = new ResponseData<>();
-        if(errors.hasErrors()){
-            for (ObjectError error : errors.getAllErrors()) {
-                responseData.getMessages().add(error.getDefaultMessage());
-            }
-            responseData.setStatus(false);
-            responseData.setPayload(null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
-        }
-        responseData.setStatus(true);
-        Report report = new Report();
-        Date dateAccident;
-        try {
-            dateAccident = new SimpleDateFormat("dd/MM/yyyy").parse(reportDTO.getDateAccident());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        report.setDateAccident(dateAccident);
-        report.setDescDamage(reportDTO.getDescDamage());
-        report.setDescIncident(reportDTO.getDescIncident());
-        report.setPenalty(reportDTO.getPenalty());
-        report.setEmployee(employeeService.getById(reportDTO.getAdminId()));
-        responseData.setPayload(reportRepo.save(report));
-
-        return ResponseEntity.ok(responseData);
-    }
-
-    public ResponseEntity<ResponseData<Report>> update(@Valid ReportDTO reportDTO, int id, Errors errors){
+    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id, Errors errors){
+        historyRepo.reviewRentRequest(id, RentStatus.BROKEN);
         getById(id);
         ResponseData<Report> responseData = new ResponseData<>();
         if(errors.hasErrors()){

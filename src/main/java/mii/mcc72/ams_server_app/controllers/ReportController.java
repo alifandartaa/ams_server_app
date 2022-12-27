@@ -27,14 +27,14 @@ public class ReportController {
         return reportService.getById(id);
     }
 
-    @PostMapping
-    public ResponseEntity<ResponseData<Report>> create(@RequestBody ReportDTO reportDTO, Errors errors){
-        return reportService.create(reportDTO, errors);
-    }
+//    @PostMapping
+//    public ResponseEntity<ResponseData<Report>> create(@RequestBody ReportDTO reportDTO, Errors errors){
+//        return reportService.create(reportDTO, errors);
+//    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Report>> update(@PathVariable int id, @RequestBody ReportDTO reportDTO, Errors errors){
-        return reportService.update(reportDTO, id, errors);
+    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@PathVariable int id, @RequestBody ReportDTO reportDTO, Errors errors){
+        return reportService.updateExistingReportById(reportDTO, id, errors);
     }
 
     @DeleteMapping("/{id}")

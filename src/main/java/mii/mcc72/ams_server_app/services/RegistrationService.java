@@ -37,23 +37,12 @@ public class RegistrationService {
         Employee employee = new Employee();
         employee.setFirstName(registrationDTO.getFirstName());
         employee.setLastName(registrationDTO.getLastName());
-        employee.setEmail(registrationDTO.getEmail());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setPassword(registrationDTO.getPassword());
         user.setEmail(registrationDTO.getEmail());
         user.setEmployee(employee);
-//        User user = new User();
-//        user.setUsername(request.getUsername());
-//        user.setPassword(request.getPassword());
-//        user.setEmail(request.getEmail());
-//        Employee employee = new Employee();
-//        employee.setFirst_name("dummy");
-//        employee.setLast_name("dummy");
-//        employee.setEmail(request.getEmail());
-//        employee.setPhone_number("081217915595");
-//        user.setEmployee(employee);
         String token = userService.signUpUser(user);
 
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;

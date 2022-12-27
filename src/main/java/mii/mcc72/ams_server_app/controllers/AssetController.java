@@ -31,8 +31,8 @@ public class AssetController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<Asset>> create(@RequestBody AssetDTO asset , Errors errors){
-        return assetService.create(asset , errors);
+    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@RequestBody AssetDTO asset , Errors errors){
+        return assetService.createSubmissionAsset(asset , errors);
     }
 
     @PutMapping("/{id}")

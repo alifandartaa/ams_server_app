@@ -6,30 +6,30 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class AssetDTO {
-    @NotEmpty(message = "Quantity is required")
+    @NotEmpty(message = "Quantity Asset is required")
     private int qty;
 
-    @NotEmpty(message = "Name is required")
+    @NotEmpty(message = "Name Asset is required")
     private String name;
 
-    @NotEmpty(message = "Description is required")
+    @NotEmpty(message = "Description Asset is required")
     private String description;
 
-    @NotEmpty(message = "Price is required")
+    @NotEmpty(message = "Price Asset is required")
     private int price;
 
-    @NotEmpty(message = "Image is required")
+    @NotEmpty(message = "Image Asset is required")
     private String image;
 
-    @NotEmpty(message = "Date is required")
+//    @NotEmpty(message = "Date is required")
     private String date;
 
-    @NotEmpty(message = "Status is required")
+//    @NotEmpty(message = "Status is required")
     private String status;
 
     @NotEmpty(message = "Employee is required")
     private int employeeId;
 
-    @NotEmpty(message = "Category is required")
+//    @NotEmpty(message = "Category Asset is required")
     private int categoryId;
 }

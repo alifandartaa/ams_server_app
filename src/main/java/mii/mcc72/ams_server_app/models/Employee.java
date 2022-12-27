@@ -50,9 +50,6 @@ public class Employee {
     @Column(name = "last_name", length = 55)
     private String lastName;
     
-    @Column(length = 50, unique = true)
-    private String email;
-    
     @Column(name = "phone_number", length = 50)
     private String phoneNumber;
 

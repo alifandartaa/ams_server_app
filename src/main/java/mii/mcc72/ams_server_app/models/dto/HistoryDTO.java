@@ -16,9 +16,6 @@ public class HistoryDTO {
     @NotEmpty(message = "End Date is required")
     private String end;
 
-    @NotEmpty(message = "Status is required")
-    private String status;
-
     @NotEmpty(message = "Employee is required")
     private int employeeId;
 

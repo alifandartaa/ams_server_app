@@ -1,9 +1,10 @@
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mii.mcc72.ams_server_app.util.RentStatus;
+import mii.mcc72.ams_server_app.utils.RentStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,8 +38,9 @@ public class History {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Asset asset;
 
-    @OneToOne(mappedBy = "history", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "history", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
+    @JsonIgnore
     private Report report;
 
 }
