@@ -6,6 +6,7 @@ import mii.mcc72.ams_server_app.models.dto.DepartmentDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.services.DepartmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/department")
+@PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class DepartmentController {
     private DepartmentService departmentService;
