@@ -5,9 +5,12 @@
 package mii.mcc72.ams_server_app.services;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Employee;
+import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
@@ -23,11 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationService {
 
     private final UserService userService;
+
+    private final RoleService roleService;
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
-    public String register(RegistrationDTO registrationDTO) {
+    public String registerAsEmployee(RegistrationDTO registrationDTO) {
         boolean isValidEmail = emailValidator.
                 test(registrationDTO.getEmail());
 
@@ -43,6 +48,67 @@ public class RegistrationService {
         user.setPassword(registrationDTO.getPassword());
         user.setEmail(registrationDTO.getEmail());
         user.setEmployee(employee);
+        List<Role> role = new ArrayList<>();
+        role.add(roleService.getById(1));
+        user.setRoles(role);
+        String token = userService.signUpUser(user);
+
+        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
+        emailSender.send(
+                registrationDTO.getEmail(),
+                buildEmail(registrationDTO.getUsername(), link));
+
+        return token;
+    }
+
+    public String registerAsAdmin(RegistrationDTO registrationDTO) {
+        boolean isValidEmail = emailValidator.
+                test(registrationDTO.getEmail());
+
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
+        Employee employee = new Employee();
+        employee.setFirstName(registrationDTO.getFirstName());
+        employee.setLastName(registrationDTO.getLastName());
+        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        User user = new User();
+        user.setUsername(registrationDTO.getUsername());
+        user.setPassword(registrationDTO.getPassword());
+        user.setEmail(registrationDTO.getEmail());
+        user.setEmployee(employee);
+        List<Role> role = new ArrayList<>();
+        role.add(roleService.getById(2));
+        user.setRoles(role);
+        String token = userService.signUpUser(user);
+
+        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
+        emailSender.send(
+                registrationDTO.getEmail(),
+                buildEmail(registrationDTO.getUsername(), link));
+
+        return token;
+    }
+
+    public String registerAsFinance(RegistrationDTO registrationDTO) {
+        boolean isValidEmail = emailValidator.
+                test(registrationDTO.getEmail());
+
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
+        Employee employee = new Employee();
+        employee.setFirstName(registrationDTO.getFirstName());
+        employee.setLastName(registrationDTO.getLastName());
+        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        User user = new User();
+        user.setUsername(registrationDTO.getUsername());
+        user.setPassword(registrationDTO.getPassword());
+        user.setEmail(registrationDTO.getEmail());
+        user.setEmployee(employee);
+        List<Role> role = new ArrayList<>();
+        role.add(roleService.getById(3));
+        user.setRoles(role);
         String token = userService.signUpUser(user);
 
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;

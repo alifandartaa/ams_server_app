@@ -10,10 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.ConfirmationToken;
-import mii.mcc72.ams_server_app.models.Employee;
-import mii.mcc72.ams_server_app.models.Role;
-import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.models.*;
 import mii.mcc72.ams_server_app.repos.EmployeeRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,8 +45,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User not found!!!")
                 );
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()));
+        return new MyUser(user);
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()));
 //                .orElseThrow(
 //                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", email)));
     }
@@ -92,11 +90,11 @@ public class UserService implements UserDetailsService {
         return userRepository.enableUser(username);
     }
 
-    public List<GrantedAuthority> getAuthorities(List<Role> roles){
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return authorities;
-    }
+//    public List<GrantedAuthority> getAuthorities(List<Role> roles){
+//        List<GrantedAuthority> authorities = new ArrayList<>();
+//        for (Role role : roles) {
+//            authorities.add(new SimpleGrantedAuthority(role.getName()));
+//        }
+//        return authorities;
+//    }
 }

@@ -6,6 +6,7 @@ import mii.mcc72.ams_server_app.models.dto.CategoryDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.services.CategoryService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/category")
+@PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class CategoryController {
 

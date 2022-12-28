@@ -7,6 +7,7 @@ import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.RoleDTO;
 import mii.mcc72.ams_server_app.services.RoleService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/role")
+@PreAuthorize("hasRole('ADMIN')")
 @AllArgsConstructor
 public class RoleController {
     private RoleService roleService;
