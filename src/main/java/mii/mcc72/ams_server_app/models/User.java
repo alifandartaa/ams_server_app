@@ -39,7 +39,7 @@ public class User {
     @Column(name = "id", length = 60)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)

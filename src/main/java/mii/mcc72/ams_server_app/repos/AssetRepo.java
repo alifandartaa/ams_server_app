@@ -25,7 +25,7 @@ public interface AssetRepo extends JpaRepository<Asset, Integer> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Asset a " + "SET h.approvedStatus = ?2 " + "WHERE h.id = ?1")
+    @Query("UPDATE Asset a " + "SET a.approvedStatus = ?2 " + "WHERE a.id = ?1")
     void reviewSubmissionRequest(int id, AssetStatus assetStatus);
 }
 

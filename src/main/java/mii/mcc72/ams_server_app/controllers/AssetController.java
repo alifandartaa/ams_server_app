@@ -47,7 +47,7 @@ public class AssetController {
         return assetService.update(asset , id, errors);
     }
 
-    @PreAuthorize("hasAuthority('UPDATE_ADMIN','UPDATE_FINANCE')")
+    @PreAuthorize("hasAnyAuthority('UPDATE_ADMIN','UPDATE_FINANCE')")
     @PostMapping("/review_asset/{id}")
     public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO){
         return assetService.reviewSubmissionRequest(id, reviewAssetDTO);
