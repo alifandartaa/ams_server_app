@@ -5,6 +5,7 @@ import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.repos.HistoryRepo;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import mii.mcc72.ams_server_app.utils.EmailSender;
@@ -30,7 +31,6 @@ public class HistoryService {
     private HistoryRepo historyRepo;
     private AssetService assetService;
     private EmployeeService employeeService;
-    private ReportService reportService;
     private final TemplateEngine templateEngine;
 
     private final EmailSender emailSender;
@@ -116,17 +116,17 @@ public class HistoryService {
         return ResponseEntity.ok(responseData);
     }
 
-    public ResponseEntity<ResponseData<History>> reviewRentRequest(@Valid int id, RentStatus rentStatus){
+    public ResponseEntity<ResponseData<History>> reviewRentRequest(@Valid int id, ReviewRentDTO reviewRentDTO){
         ResponseData<History> responseData = new ResponseData<>();
         responseData.setStatus(true);
-        historyRepo.reviewRentRequest(id, rentStatus);
+        historyRepo.reviewRentRequest(id, reviewRentDTO.getRentStatus());
         responseData.setPayload(getById(id));
         //send email before return
         History history = getById(id);
         Context ctx = new Context();
         ctx.setVariable("asset_name", history.getAsset().getName());
         ctx.setVariable("first_name", "Hi " + history.getEmployee().getFirstName());
-        ctx.setVariable("rent_status", "Rent Request " + rentStatus);
+        ctx.setVariable("rent_status", "Rent Request " + reviewRentDTO.getRentStatus());
         ctx.setVariable("rent_list_link", "link");
         String htmlContent = templateEngine.process("mailtrap_template", ctx);
         emailSender.send(

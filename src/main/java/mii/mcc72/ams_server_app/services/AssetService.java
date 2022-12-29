@@ -1,17 +1,23 @@
 package mii.mcc72.ams_server_app.services;
 
 import mii.mcc72.ams_server_app.models.Asset;
+import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
+import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
+import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -27,9 +33,13 @@ public class AssetService {
     private EmployeeService employeeService;
     private CategoryService categoryService;
 
+    private final TemplateEngine templateEngine;
+
     public List<Asset> getAll() {
         return assetRepo.findAll();
     }
+
+    private final EmailSender emailSender;
 
     public Asset getById(int id) {
         return assetRepo.findById(id).orElseThrow(
@@ -73,7 +83,7 @@ public class AssetService {
         asset.setPrice(assetDTO.getPrice());
         asset.setImage(assetDTO.getImage());
         asset.setDate(date);
-        asset.setApprovedStatus(AssetStatus.PENDING);
+        asset.setApprovedStatus(AssetStatus.PENDING_ADMIN);
         asset.setEmployee(employeeService.getById(assetDTO.getEmployeeId()));
         asset.setCategory(categoryService.getById(assetDTO.getCategoryId()));
         responseData.setPayload(assetRepo.save(asset));
@@ -110,6 +120,27 @@ public class AssetService {
         asset.setEmployee(employeeService.getById(assetDTO.getEmployeeId()));
         asset.setCategory(categoryService.getById(assetDTO.getCategoryId()));
         responseData.setPayload(assetRepo.save(asset));
+        return ResponseEntity.ok(responseData);
+    }
+
+    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@Valid int id, ReviewAssetDTO reviewAssetDTO){
+        ResponseData<Asset> responseData = new ResponseData<>();
+        responseData.setStatus(true);
+        assetRepo.reviewSubmissionRequest(id, reviewAssetDTO.getAssetStatus());
+        responseData.setPayload(getById(id));
+        //send email if approved before return
+        if(reviewAssetDTO.getAssetStatus().equals(AssetStatus.APPROVED)){
+            Asset asset = getById(id);
+            Context ctx = new Context();
+            ctx.setVariable("asset_name", asset.getName());
+            ctx.setVariable("first_name", "Hi " + asset.getEmployee().getFirstName());
+            ctx.setVariable("rent_status", "Submission Request " + reviewAssetDTO.getAssetStatus());
+            ctx.setVariable("rent_list_link", "link");
+            String htmlContent = templateEngine.process("mailtrap_template", ctx);
+            emailSender.send(
+                    asset.getEmployee().getUser().getEmail(),
+                    htmlContent);
+        }
         return ResponseEntity.ok(responseData);
     }
 
