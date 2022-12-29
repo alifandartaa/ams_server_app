@@ -1,16 +1,18 @@
 package mii.mcc72.ams_server_app.config;
 
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.Category;
-import mii.mcc72.ams_server_app.models.Privilege;
-import mii.mcc72.ams_server_app.models.Role;
-import mii.mcc72.ams_server_app.repos.CategoryRepo;
-import mii.mcc72.ams_server_app.repos.PrivilegeRepo;
-import mii.mcc72.ams_server_app.repos.RoleRepo;
+import mii.mcc72.ams_server_app.models.*;
+import mii.mcc72.ams_server_app.repos.*;
+import mii.mcc72.ams_server_app.utils.AssetStatus;
+import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Component
 @AllArgsConstructor
@@ -18,6 +20,11 @@ public class DataDummyGenerator implements CommandLineRunner {
     private final PrivilegeRepo privilegeRepository;
     private final RoleRepo roleRepository;
     private final CategoryRepo categoryRepo;
+    private final UserRepository userRepository;
+
+    private final AssetRepo assetRepo;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
@@ -70,5 +77,62 @@ public class DataDummyGenerator implements CommandLineRunner {
         privilegeRepository.insertRolePrivilege(3, 10);
         privilegeRepository.insertRolePrivilege(3, 11);
         privilegeRepository.insertRolePrivilege(3, 12);
+
+        ArrayList<Asset> listAsset = new ArrayList<>();
+        //Asset 1
+        Asset asset1 = new Asset();
+        asset1.setId(1);
+        asset1.setQty(10);
+        asset1.setName("Laptop");
+        asset1.setDescription("mengerjakan tugas, membuat materi presentasi, mengikuti kegiatan belajar mengajar secara virtual, mengakses E- Learning, mencari materi");
+        asset1.setPrice(11500000);
+        asset1.setImage("https://static.bmdstatic.com/pk/product/large/6051fb122755b.jpg");
+        Date submissionDate1;
+        submissionDate1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/07/2011");
+        asset1.setDate(submissionDate1);
+        asset1.setApprovedStatus(AssetStatus.APPROVED);
+        asset1.setEmployee(null);
+        asset1.setCategory(categoryDigital);
+        asset1.setHistories(null);
+        listAsset.add(asset1);
+
+        //Asset 2
+        Asset asset2 = new Asset();
+        asset2.setId(2);
+        asset2.setQty(1);
+        asset2.setName("Meeting Room");
+        asset2.setDescription("sebagai tempat berkumpul, berdiskusi, rapat, untuk menentukan prioritas atau membuat tujuan, interview calon pekerja");
+        asset2.setPrice(100000);
+        asset2.setImage("https://www.justcoglobal.com/wp-content/uploads/2022/06/meeting-rooms.jpg");
+        Date submissionDate2;
+        submissionDate2 = new SimpleDateFormat("dd/MM/yyyy").parse("21/07/2011");
+        asset2.setDate(submissionDate2);
+        asset2.setApprovedStatus(AssetStatus.APPROVED);
+        asset2.setEmployee(null);
+        asset2.setCategory(categoryBangunan);
+        asset2.setHistories(null);
+        listAsset.add(asset2);
+
+        assetRepo.saveAll(listAsset);
+
+        //Generate Account Admin
+        if(!userRepository.findByUsername("admin").isPresent()){
+            Employee employee = new Employee();
+            employee.setFirstName("Admin");
+            employee.setLastName("System");
+            employee.setPhoneNumber("123456789");
+            User user = new User();
+            user.setUsername("admin");
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode("admin");
+            user.setPassword(encodedPassword);
+            user.setIsEnabled(true);
+            user.setEmployee(employee);
+            List<Role> role = new ArrayList<>();
+            role.add(roleRepository.findById(2).get());
+            user.setRoles(role);
+            userRepository.save(user);
+        }
+
     }
 }
