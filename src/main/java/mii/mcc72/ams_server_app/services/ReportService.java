@@ -1,9 +1,12 @@
 package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
+import mii.mcc72.ams_server_app.models.Asset;
+import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.ReportDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.repos.AssetRepo;
 import mii.mcc72.ams_server_app.repos.HistoryRepo;
 import mii.mcc72.ams_server_app.repos.ReportRepo;
 import mii.mcc72.ams_server_app.utils.RentStatus;
@@ -25,7 +28,11 @@ import java.util.List;
 public class ReportService {
     private ReportRepo reportRepo;
     private HistoryRepo historyRepo;
+
+    private AssetRepo assetRepo;
     private EmployeeService employeeService;
+
+    private AssetService assetService;
 
     public List<Report> getAll(){
         return reportRepo.findAll();
@@ -39,6 +46,7 @@ public class ReportService {
 
     public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id, Errors errors){
         historyRepo.reviewRentRequest(id, RentStatus.BROKEN);
+        assetRepo.decreaseQtyAfterBroken(historyRepo.findById(id).get().getAsset().getId());
         getById(id);
         ResponseData<Report> responseData = new ResponseData<>();
         if(errors.hasErrors()){
@@ -66,6 +74,12 @@ public class ReportService {
         responseData.setPayload(reportRepo.save(report));
         return ResponseEntity.ok(responseData);
     }
+
+//    public void decreaseQtyAfterBroken(int id){
+//        Asset asset = historyRepo.findById(id).get().getAsset();
+//        asset.setQty(asset.getQty()-1);
+//        assetRepo.save(asset);
+//    }
 
     public Report delete(int id){
         Report report = getById(id);
