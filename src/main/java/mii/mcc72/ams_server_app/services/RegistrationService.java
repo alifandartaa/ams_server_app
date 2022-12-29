@@ -62,8 +62,9 @@ public class RegistrationService {
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
+        String subject = "Activate Your Employee Account";
         emailSender.send(
-                registrationDTO.getEmail(),
+                registrationDTO.getEmail(), subject,
                 htmlContent);
 
         return token;
@@ -95,8 +96,9 @@ public class RegistrationService {
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
+        String subject = "Activate Your Admin Account";
         emailSender.send(
-                registrationDTO.getEmail(),
+                registrationDTO.getEmail(), subject ,
                 htmlContent);
 
         return token;
@@ -128,8 +130,9 @@ public class RegistrationService {
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
+        String subject = "Activate Your Finance Account";
         emailSender.send(
-                registrationDTO.getEmail(),
+                registrationDTO.getEmail(), subject ,
                 htmlContent);
 
         return token;

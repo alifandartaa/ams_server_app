@@ -9,5 +9,5 @@ package mii.mcc72.ams_server_app.utils;
  * @author bintang mada
  */
 public interface EmailSender {
-    void send(String to, String email);
+    void send(String to, String subject, String email);
 }

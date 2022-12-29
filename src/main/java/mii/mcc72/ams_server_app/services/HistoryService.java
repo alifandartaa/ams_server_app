@@ -130,7 +130,7 @@ public class HistoryService {
         ctx.setVariable("rent_list_link", "link");
         String htmlContent = templateEngine.process("mailtrap_template", ctx);
         emailSender.send(
-                history.getEmployee().getUser().getEmail(),
+                history.getEmployee().getUser().getEmail(), "Your Rent Request Result",
                 htmlContent);
         return ResponseEntity.ok(responseData);
     }

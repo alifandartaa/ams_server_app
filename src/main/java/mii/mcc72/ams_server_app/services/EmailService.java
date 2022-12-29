@@ -31,14 +31,14 @@ public class EmailService implements EmailSender{
 
     @Override
     @Async
-    public void send(String to, String content) {
+    public void send(String to, String subject, String content) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(content, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
-            helper.setFrom("mcc72java@gmail.com");
+            helper.setSubject(subject);
+            helper.setFrom("Asset Management System");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);

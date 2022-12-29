@@ -34,12 +34,12 @@ public class AssetService {
     private CategoryService categoryService;
 
     private final TemplateEngine templateEngine;
+    private final EmailSender emailSender;
 
     public List<Asset> getAll() {
         return assetRepo.findAll();
     }
 
-    private final EmailSender emailSender;
 
     public Asset getById(int id) {
         return assetRepo.findById(id).orElseThrow(
@@ -138,7 +138,7 @@ public class AssetService {
             ctx.setVariable("rent_list_link", "link");
             String htmlContent = templateEngine.process("mailtrap_template", ctx);
             emailSender.send(
-                    asset.getEmployee().getUser().getEmail(),
+                    asset.getEmployee().getUser().getEmail(), "Your Submission Request Result",
                     htmlContent);
         }
         return ResponseEntity.ok(responseData);
