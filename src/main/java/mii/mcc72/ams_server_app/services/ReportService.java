@@ -9,6 +9,7 @@ import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
 import mii.mcc72.ams_server_app.repos.HistoryRepo;
 import mii.mcc72.ams_server_app.repos.ReportRepo;
+import mii.mcc72.ams_server_app.utils.EmailSender;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.server.ResponseStatusException;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -33,6 +36,9 @@ public class ReportService {
     private EmployeeService employeeService;
 
     private AssetService assetService;
+
+    private final TemplateEngine templateEngine;
+    private final EmailSender emailSender;
 
     public List<Report> getAll(){
         return reportRepo.findAll();
@@ -72,6 +78,16 @@ public class ReportService {
         report.setPenalty(reportDTO.getPenalty());
         report.setEmployee(employeeService.getById(reportDTO.getAdminId()));
         responseData.setPayload(reportRepo.save(report));
+        Context ctx = new Context();
+//        ctx.setVariable("penalty", asset.getName());
+        History history = historyRepo.findById(id).get();
+        ctx.setVariable("first_name", "Hi " + history.getEmployee().getFirstName());
+        ctx.setVariable("penalty_cost", report.getPenalty());
+//        ctx.setVariable("penalty_title", "link");
+        String htmlContent = templateEngine.process("template_penalty", ctx);
+        emailSender.send(
+                history.getEmployee().getUser().getEmail(), "Penalty Rent Report",
+                htmlContent);
         return ResponseEntity.ok(responseData);
     }
 
