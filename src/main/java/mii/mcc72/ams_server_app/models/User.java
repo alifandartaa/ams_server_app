@@ -45,7 +45,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = false, unique=true)
+    @Column(unique=true)
     private String email;
 
     private Boolean isEnabled = false;

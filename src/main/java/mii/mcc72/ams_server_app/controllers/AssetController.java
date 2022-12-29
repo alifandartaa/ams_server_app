@@ -4,9 +4,13 @@ package mii.mcc72.ams_server_app.controllers;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.Employee;
+import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
+import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.services.AssetService;
+import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.Errors;
@@ -41,6 +45,12 @@ public class AssetController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseData<Asset>> update(@PathVariable int id, @RequestBody AssetDTO asset , Errors errors){
         return assetService.update(asset , id, errors);
+    }
+
+    @PreAuthorize("hasAuthority('UPDATE_ADMIN','UPDATE_FINANCE')")
+    @PostMapping("/review_asset/{id}")
+    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO){
+        return assetService.reviewSubmissionRequest(id, reviewAssetDTO);
     }
 
     @PreAuthorize("hasAuthority('DELETE_FINANCE')")
