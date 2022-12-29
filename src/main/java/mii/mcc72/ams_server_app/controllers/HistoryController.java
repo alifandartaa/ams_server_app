@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
+import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.services.HistoryService;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +50,8 @@ public class HistoryController {
 
     @PreAuthorize("hasAuthority('UPDATE_ADMIN')")
     @PostMapping("/review_rent/{id}")
-    public ResponseEntity<ResponseData<History>> reviewRentRequest(@PathVariable int id, @RequestParam("rent_status") RentStatus rentStatus){
-        return historyService.reviewRentRequest(id, rentStatus);
+    public ResponseEntity<ResponseData<History>> reviewRentRequest(@PathVariable int id, @RequestBody ReviewRentDTO reviewRentDTO){
+        return historyService.reviewRentRequest(id, reviewRentDTO);
     }
 
     @DeleteMapping("/{id}")
