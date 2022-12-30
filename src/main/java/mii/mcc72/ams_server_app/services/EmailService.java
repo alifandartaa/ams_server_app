@@ -38,7 +38,7 @@ public class EmailService implements EmailSender{
             helper.setText(content, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setFrom("Asset Management System");
+            helper.setFrom("mcc72java@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);

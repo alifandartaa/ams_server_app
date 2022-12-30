@@ -53,6 +53,9 @@ public class MyUser implements UserDetails {
         return user.getUsername();
     }
 
+    public int getId() {
+        return user.getId();
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;

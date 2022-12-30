@@ -5,7 +5,6 @@ import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.User;
-import mii.mcc72.ams_server_app.services.AssetService;
 import mii.mcc72.ams_server_app.services.EmpService;
 import mii.mcc72.ams_server_app.services.UserService;
 import mii.mcc72.ams_server_app.utils.AssetStatus;

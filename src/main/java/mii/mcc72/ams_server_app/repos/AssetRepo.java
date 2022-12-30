@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,7 @@ public interface AssetRepo extends JpaRepository<Asset, Integer> {
     @Modifying
     @Query("UPDATE Asset a " + "SET a.approvedStatus = ?2 " + "WHERE a.id = ?1")
     void reviewSubmissionRequest(int id, AssetStatus assetStatus);
+
+    List<Asset> findAllByApprovedStatusEquals(AssetStatus assetStatus);
 }
 

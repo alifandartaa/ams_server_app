@@ -52,6 +52,12 @@ public class UserService implements UserDetailsService {
 //                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", email)));
     }
 
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", username)));
+    }
+
     public String signUpUser(User user) {
         boolean userExists = userRepository
                 .findByUsername(user.getUsername())
