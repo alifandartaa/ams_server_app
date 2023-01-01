@@ -21,10 +21,11 @@ public class DataDummyGenerator implements CommandLineRunner {
     private final RoleRepo roleRepository;
     private final CategoryRepo categoryRepo;
     private final UserRepository userRepository;
-
+    private final DepartmentRepo departmentRepo;
     private final AssetRepo assetRepo;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EmployeeRepo employeeRepo;
 
 
     @Override
@@ -86,12 +87,12 @@ public class DataDummyGenerator implements CommandLineRunner {
         asset1.setName("Laptop");
         asset1.setDescription("mengerjakan tugas, membuat materi presentasi, mengikuti kegiatan belajar mengajar secara virtual, mengakses E- Learning, mencari materi");
         asset1.setPrice(11500000);
-        asset1.setImage("https://static.bmdstatic.com/pk/product/large/6051fb122755b.jpg");
+        asset1.setImage("DownloadArena.ico");
         Date submissionDate1;
         submissionDate1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/07/2011");
         asset1.setDate(submissionDate1);
         asset1.setApprovedStatus(AssetStatus.APPROVED);
-        asset1.setEmployee(null);
+        asset1.setEmployee(employeeRepo.findById(1).get());
         asset1.setCategory(categoryDigital);
         asset1.setHistories(null);
         listAsset.add(asset1);
@@ -103,18 +104,26 @@ public class DataDummyGenerator implements CommandLineRunner {
         asset2.setName("Meeting Room");
         asset2.setDescription("sebagai tempat berkumpul, berdiskusi, rapat, untuk menentukan prioritas atau membuat tujuan, interview calon pekerja");
         asset2.setPrice(100000);
-        asset2.setImage("https://www.justcoglobal.com/wp-content/uploads/2022/06/meeting-rooms.jpg");
+        asset2.setImage("legion_game_shop.ico");
         Date submissionDate2;
         submissionDate2 = new SimpleDateFormat("dd/MM/yyyy").parse("21/07/2011");
         asset2.setDate(submissionDate2);
         asset2.setApprovedStatus(AssetStatus.APPROVED);
-        asset2.setEmployee(null);
+        asset2.setEmployee(employeeRepo.findById(2).get());
         asset2.setCategory(categoryBangunan);
         asset2.setHistories(null);
         listAsset.add(asset2);
 
         assetRepo.saveAll(listAsset);
 
+        ArrayList<Department> listDepartment = new ArrayList<>();
+        Department departmentMarketing = new Department(1, "Marketing" , 50000000 , null);
+        listDepartment.add(departmentMarketing);
+        Department departmentHR = new Department(2, "Human Resource" , 75000000 , null);
+        listDepartment.add(departmentHR);
+        Department departmentIT = new Department(3, "Information Technology" , 100000000 , null);
+        listDepartment.add(departmentIT);
+        departmentRepo.saveAll(listDepartment);
         //Generate Account Admin
         if(!userRepository.findByUsername("admin").isPresent()){
             Employee employee = new Employee();
@@ -127,6 +136,7 @@ public class DataDummyGenerator implements CommandLineRunner {
                     .encode("admin");
             user.setPassword(encodedPassword);
             user.setIsEnabled(true);
+            user.setEmail("admin@yopmail.com");
             user.setEmployee(employee);
             List<Role> role = new ArrayList<>();
             role.add(roleRepository.findById(2).get());

@@ -12,6 +12,9 @@ import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -47,6 +50,15 @@ public class AssetService {
         );
     }
 
+    public AssetStatus getStatus() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
+
+        return AssetStatus.PENDING_FINANCE;
+        }else{
+            return AssetStatus.PENDING_ADMIN;
+        }
+    }
     public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@Valid AssetDTO assetDTO , int id, Errors errors) {
         if (assetRepo.existsAssetByName(assetDTO.getName())) {
             Asset targetAsset = assetRepo.findByName(assetDTO.getName()).orElseThrow(
@@ -83,7 +95,8 @@ public class AssetService {
         asset.setPrice(assetDTO.getPrice());
         asset.setImage(assetDTO.getImage());
         asset.setDate(date);
-        asset.setApprovedStatus(AssetStatus.PENDING_ADMIN);
+
+        asset.setApprovedStatus(getStatus());
         asset.setEmployee(employeeService.getById(id));
         asset.setCategory(categoryService.getById(assetDTO.getCategoryId()));
         responseData.setPayload(assetRepo.save(asset));

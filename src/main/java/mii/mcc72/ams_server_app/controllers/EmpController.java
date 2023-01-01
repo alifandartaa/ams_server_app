@@ -40,8 +40,9 @@ public class EmpController {
 
     @GetMapping("/available")
     public List<Asset> getAvailable() {
-        System.out.println("get available");
-        return empService.getAllAssetsByStatus(AssetStatus.APPROVED);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return empService.getAllAssetsByStatus(AssetStatus.APPROVED , user.getEmployee().getDepartment().getName());
     }
 
     @GetMapping("/submission")
@@ -77,5 +78,10 @@ public class EmpController {
         return empService.createRentRequest(historyDTO , user.getId(), errors);
     }
 
+    @PreAuthorize("hasAuthority('READ_FINANCE')")
+    @GetMapping("/assets_pending_finance")
+    public List<Asset> getAssetsPendingFinance(){
+        return empService.getPendingFinanceAssets();
+    }
 
 }

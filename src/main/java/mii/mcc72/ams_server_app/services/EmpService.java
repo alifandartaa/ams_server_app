@@ -2,6 +2,7 @@ package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
+import mii.mcc72.ams_server_app.models.Department;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
@@ -44,9 +45,9 @@ public class EmpService {
     return reportRepo.getPenalty(id).stream().filter(report -> report.getPenalty() > 0).collect(Collectors.toList());
     }
 
-    public List<Asset> getAllAssetsByStatus(AssetStatus status) {
-        System.out.println(status);
-        return assetRepo.findAll().stream().filter(asset -> asset.getApprovedStatus().equals(status)).collect(Collectors.toList());
+    public List<Asset> getAllAssetsByStatus(AssetStatus status , String department) {
+        System.out.println(department);
+        return assetRepo.findAll().stream().filter(asset -> asset.getApprovedStatus().equals(status) && asset.getEmployee().getDepartment().getName() == department).collect(Collectors.toList());
     }
 
     public List<Asset> getAllAssetsByStatusAndEmpId(AssetStatus status, int empId) {
@@ -56,10 +57,6 @@ public class EmpService {
     public List<History> getAllHistoryByEmpId(int empId) {
         return historyRepo.findAll().stream().filter(history -> history.getEmployee().getId() == empId).collect(Collectors.toList());
     }
-
-
-    public List<Asset> getPendingFinanceAssets(){
-        return assetRepo.getPendingFinanceAssets();
 
     public List<Object> getListPenalty(int id) {
         return reportRepo.getListPenalty(id);
@@ -105,4 +102,9 @@ public class EmpService {
         responseData.setPayload(historyRepo.save(history));
         return ResponseEntity.ok(responseData);
     }
+    public List<Asset> getPendingFinanceAssets() {
+        return assetRepo.getPendingFinanceAssets();
+    }
+
+
 }
