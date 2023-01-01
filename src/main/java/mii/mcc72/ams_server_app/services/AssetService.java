@@ -47,7 +47,7 @@ public class AssetService {
         );
     }
 
-    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@Valid AssetDTO assetDTO, Errors errors) {
+    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@Valid AssetDTO assetDTO , int id, Errors errors) {
         if (assetRepo.existsAssetByName(assetDTO.getName())) {
             Asset targetAsset = assetRepo.findByName(assetDTO.getName()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset Name %s Not Found !!", assetDTO.getName()))
@@ -84,7 +84,7 @@ public class AssetService {
         asset.setImage(assetDTO.getImage());
         asset.setDate(date);
         asset.setApprovedStatus(AssetStatus.PENDING_ADMIN);
-        asset.setEmployee(employeeService.getById(assetDTO.getEmployeeId()));
+        asset.setEmployee(employeeService.getById(id));
         asset.setCategory(categoryService.getById(assetDTO.getCategoryId()));
         responseData.setPayload(assetRepo.save(asset));
         return ResponseEntity.ok(responseData);
