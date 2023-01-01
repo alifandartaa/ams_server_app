@@ -44,5 +44,7 @@ public class EmpService {
         return historyRepo.findAll().stream().filter(history -> history.getEmployee().getId() == empId).collect(Collectors.toList());
     }
 
-
+    public List<Asset> getPendingFinanceAssets(){
+        return assetRepo.getPendingFinanceAssets();
+    }
 }
