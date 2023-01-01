@@ -5,14 +5,18 @@ import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.History;
+import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.services.AssetService;
+import mii.mcc72.ams_server_app.services.UserService;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +29,7 @@ import java.util.List;
 public class AssetController {
 
     private AssetService assetService;
+    private UserService userService;
 
     @GetMapping
     public List<Asset> getAll(){
@@ -38,7 +43,9 @@ public class AssetController {
 
     @PostMapping
     public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@RequestBody AssetDTO asset , Errors errors){
-        return assetService.createSubmissionAsset(asset , errors);
+        Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return assetService.createSubmissionAsset(asset ,user.getId(), errors);
     }
 
     @PreAuthorize("hasAuthority('UPDATE_FINANCE')")
