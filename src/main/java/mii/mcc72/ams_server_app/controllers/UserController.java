@@ -51,5 +51,9 @@ public class UserController {
         return empService.getAllHistoryByEmpId(user.getId());
     }
 
-
+    @PreAuthorize("hasAuthority('READ_FINANCE')")
+    @GetMapping("/assets_pending_finance")
+    public List<Asset> getAssetsPendingFinance(){
+        return empService.getPendingFinanceAssets();
+    }
 }

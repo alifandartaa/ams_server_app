@@ -30,5 +30,8 @@ public interface AssetRepo extends JpaRepository<Asset, Integer> {
     void reviewSubmissionRequest(int id, AssetStatus assetStatus);
 
     List<Asset> findAllByApprovedStatusEquals(AssetStatus assetStatus);
+
+    @Query(value = "SELECT * FROM asset WHERE approved_status = 'PENDING_FINANCE'", nativeQuery = true)
+    List<Asset> getPendingFinanceAssets();
 }
 
