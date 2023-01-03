@@ -79,6 +79,36 @@ public class DataDummyGenerator implements CommandLineRunner {
         privilegeRepository.insertRolePrivilege(3, 11);
         privilegeRepository.insertRolePrivilege(3, 12);
 
+        ArrayList<Department> listDepartment = new ArrayList<>();
+        Department departmentMarketing = new Department(1, "Marketing" , 50000000 , null);
+        listDepartment.add(departmentMarketing);
+        Department departmentHR = new Department(2, "Human Resource" , 75000000 , null);
+        listDepartment.add(departmentHR);
+        Department departmentIT = new Department(3, "Information Technology" , 100000000 , null);
+        listDepartment.add(departmentIT);
+        departmentRepo.saveAll(listDepartment);
+
+        //Generate Account Admin
+        if(!userRepository.findByUsername("admin").isPresent()){
+            Employee employee = new Employee();
+            employee.setFirstName("Admin");
+            employee.setLastName("System");
+            employee.setPhoneNumber("123456789");
+            employee.setDepartment(departmentIT);
+            User user = new User();
+            user.setUsername("admin");
+            String encodedPassword = bCryptPasswordEncoder
+                    .encode("admin");
+            user.setPassword(encodedPassword);
+            user.setIsEnabled(true);
+            user.setEmail("admin@yopmail.com");
+            user.setEmployee(employee);
+            List<Role> role = new ArrayList<>();
+            role.add(roleRepository.findById(2).get());
+            user.setRoles(role);
+            userRepository.save(user);
+        }
+
         ArrayList<Asset> listAsset = new ArrayList<>();
         //Asset 1
         Asset asset1 = new Asset();
@@ -87,7 +117,7 @@ public class DataDummyGenerator implements CommandLineRunner {
         asset1.setName("Laptop");
         asset1.setDescription("mengerjakan tugas, membuat materi presentasi, mengikuti kegiatan belajar mengajar secara virtual, mengakses E- Learning, mencari materi");
         asset1.setPrice(11500000);
-        asset1.setImage("DownloadArena.ico");
+        asset1.setImage("laptop_rog.png");
         Date submissionDate1;
         submissionDate1 = new SimpleDateFormat("dd/MM/yyyy").parse("20/07/2011");
         asset1.setDate(submissionDate1);
@@ -104,45 +134,20 @@ public class DataDummyGenerator implements CommandLineRunner {
         asset2.setName("Meeting Room");
         asset2.setDescription("sebagai tempat berkumpul, berdiskusi, rapat, untuk menentukan prioritas atau membuat tujuan, interview calon pekerja");
         asset2.setPrice(100000);
-        asset2.setImage("legion_game_shop.ico");
+        asset2.setImage("meeting_room.jpg");
         Date submissionDate2;
         submissionDate2 = new SimpleDateFormat("dd/MM/yyyy").parse("21/07/2011");
         asset2.setDate(submissionDate2);
         asset2.setApprovedStatus(AssetStatus.APPROVED);
-        asset2.setEmployee(employeeRepo.findById(2).get());
+        asset2.setEmployee(employeeRepo.findById(1).get());
         asset2.setCategory(categoryBangunan);
         asset2.setHistories(null);
         listAsset.add(asset2);
 
         assetRepo.saveAll(listAsset);
 
-        ArrayList<Department> listDepartment = new ArrayList<>();
-        Department departmentMarketing = new Department(1, "Marketing" , 50000000 , null);
-        listDepartment.add(departmentMarketing);
-        Department departmentHR = new Department(2, "Human Resource" , 75000000 , null);
-        listDepartment.add(departmentHR);
-        Department departmentIT = new Department(3, "Information Technology" , 100000000 , null);
-        listDepartment.add(departmentIT);
-        departmentRepo.saveAll(listDepartment);
-        //Generate Account Admin
-        if(!userRepository.findByUsername("admin").isPresent()){
-            Employee employee = new Employee();
-            employee.setFirstName("Admin");
-            employee.setLastName("System");
-            employee.setPhoneNumber("123456789");
-            User user = new User();
-            user.setUsername("admin");
-            String encodedPassword = bCryptPasswordEncoder
-                    .encode("admin");
-            user.setPassword(encodedPassword);
-            user.setIsEnabled(true);
-            user.setEmail("admin@yopmail.com");
-            user.setEmployee(employee);
-            List<Role> role = new ArrayList<>();
-            role.add(roleRepository.findById(2).get());
-            user.setRoles(role);
-            userRepository.save(user);
-        }
+
+
 
     }
 }
