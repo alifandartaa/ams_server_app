@@ -43,6 +43,9 @@ public class AssetService {
         return assetRepo.findAll();
     }
 
+    public List<Asset> getRecentReviewAsset() {
+        return assetRepo.getRecentReviewAsset();
+    }
 
     public Asset getById(int id) {
         return assetRepo.findById(id).orElseThrow(
