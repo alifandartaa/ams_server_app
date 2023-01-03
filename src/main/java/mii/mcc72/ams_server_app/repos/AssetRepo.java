@@ -37,7 +37,10 @@ public interface AssetRepo extends JpaRepository<Asset, Integer> {
     @Query(value = "SELECT * FROM asset WHERE approved_status = 'APPROVED' OR approved_status = 'DENIED'", nativeQuery = true)
     List<Asset> getRecentReviewAsset();
 
+
     @Query(value = "SELECT * FROM asset WHERE approved_status = 'PENDING_ADMIN'", nativeQuery = true)
     List<Asset> getPendingAdminAssets();
+
+
 }
 
