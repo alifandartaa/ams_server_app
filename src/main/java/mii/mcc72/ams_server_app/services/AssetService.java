@@ -43,6 +43,9 @@ public class AssetService {
         return assetRepo.findAll();
     }
 
+    public List<Asset> getRecentReviewAsset() {
+        return assetRepo.getRecentReviewAsset();
+    }
 
     public Asset getById(int id) {
         return assetRepo.findById(id).orElseThrow(
@@ -64,7 +67,7 @@ public class AssetService {
             Asset targetAsset = assetRepo.findByName(assetDTO.getName()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset Name %s Not Found !!", assetDTO.getName()))
             );
-            update(assetDTO, targetAsset.getId(), errors);
+//             update(assetDTO, targetAsset.getId(), errors);
         }
         ResponseData<Asset> responseData = new ResponseData<>();
         if (errors.hasErrors()) {
@@ -117,12 +120,14 @@ public class AssetService {
         responseData.setStatus(true);
         Asset asset = new Asset();
         asset.setId(id);
-        Date date;
-        try {
-            date = new SimpleDateFormat("dd/MM/yyyy").parse(assetDTO.getDate());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        Date date =  new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter.format(date);
+//        try {
+//            date = new SimpleDateFormat("dd/MM/yyyy").parse(assetDTO.getDate());
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
         asset.setQty(assetDTO.getQty());
         asset.setName(assetDTO.getName());
         asset.setDescription(assetDTO.getDescription());

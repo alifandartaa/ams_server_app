@@ -14,6 +14,7 @@ import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
+import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
+    private final DepartmentRepo departmentRepo;
+
     private final TemplateEngine templateEngine;
 
     public String registerAsEmployee(RegistrationDTO registrationDTO) {
@@ -47,6 +50,8 @@ public class RegistrationService {
         employee.setFirstName(registrationDTO.getFirstName());
         employee.setLastName(registrationDTO.getLastName());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        //should be input department
+        employee.setDepartment(departmentRepo.findById(3).get());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setPassword(registrationDTO.getPassword());
@@ -60,6 +65,8 @@ public class RegistrationService {
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         Context ctx = new Context();
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
         String subject = "Activate Your Employee Account";
@@ -81,6 +88,8 @@ public class RegistrationService {
         employee.setFirstName(registrationDTO.getFirstName());
         employee.setLastName(registrationDTO.getLastName());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        //should be input department
+        employee.setDepartment(departmentRepo.findById(3).get());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setPassword(registrationDTO.getPassword());
@@ -94,6 +103,8 @@ public class RegistrationService {
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         Context ctx = new Context();
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
         String subject = "Activate Your Admin Account";
@@ -128,6 +139,8 @@ public class RegistrationService {
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         Context ctx = new Context();
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
         String subject = "Activate Your Finance Account";

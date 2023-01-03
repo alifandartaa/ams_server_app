@@ -31,6 +31,7 @@ public class AssetController {
     private AssetService assetService;
     private UserService userService;
 
+
     @GetMapping
     public List<Asset> getAll(){
         return assetService.getAll();
@@ -58,6 +59,12 @@ public class AssetController {
     @PostMapping("/review_asset/{id}")
     public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO){
         return assetService.reviewSubmissionRequest(id, reviewAssetDTO);
+    }
+
+    @PreAuthorize("hasAuthority('READ_FINANCE')")
+    @GetMapping("recent_review")
+    public List<Asset> recentReviewAssetByFinance(){
+        return assetService.getRecentReviewAsset();
     }
 
     @PreAuthorize("hasAuthority('DELETE_FINANCE')")
