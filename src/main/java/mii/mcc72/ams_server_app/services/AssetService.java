@@ -125,7 +125,7 @@ public class AssetService {
         responseData.setStatus(true);
         Asset asset = new Asset();
         asset.setId(id);
-        Date date =  new Date();
+        Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.format(date);
 //        try {

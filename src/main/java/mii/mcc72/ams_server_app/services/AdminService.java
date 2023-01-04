@@ -5,29 +5,12 @@ import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
-import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
-import mii.mcc72.ams_server_app.models.dto.PenaltyDTO;
-import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
 import mii.mcc72.ams_server_app.repos.EmployeeRepo;
 import mii.mcc72.ams_server_app.repos.HistoryRepo;
 import mii.mcc72.ams_server_app.repos.ReportRepo;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.RentStatus;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
-
-import javax.validation.Valid;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +25,7 @@ public class AdminService {
     private HistoryRepo historyRepo;
     private final EmployeeRepo employeeRepo;
     private final ReportRepo reportRepo;
+    private final UserService userService;
 
     private final UserService userService;
 
@@ -79,6 +63,7 @@ return reportRepo.getReport(id);
         return employeeRepo.findAll().stream().filter(employee -> employee.getId() != id).collect(Collectors.toList());
     }
 
+    //list all user
     public List<User> getAllUser(){
         return userService.getAllUser();
     }
