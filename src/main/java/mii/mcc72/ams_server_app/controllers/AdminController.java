@@ -111,21 +111,34 @@ public class AdminController {
         User user = userService.getByUsername(auth.getName());
         return adminService.getListSubmission(user.getId() , user.getEmployee().getDepartment().getId());
     }
+
+    @GetMapping("/getQty/{id}")
+    public Asset getQty(@PathVariable int id) {
+        return adminService.getQty(id);
+    }
     @GetMapping("/reqRent")
     public List<History> getReqRent() {
-        return adminService.getReqRent();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return adminService.getReqRent(user.getEmployee().getDepartment().getId());
     }
     @GetMapping("/rent")
     public List<History> getRent() {
-        return adminService.getRent();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return adminService.getRent(user.getEmployee().getDepartment().getId());
     }
     @GetMapping("/report")
-    public List<Report> getReport() {
-        return adminService.getReport();
+    public List<Object> getReport() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return adminService.getReport(user.getId());
     }
     @GetMapping("/return")
     public List<History> getReqReturn() {
-        return adminService.getReqReturn();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return adminService.getReqReturn(user.getEmployee().getDepartment().getId());
     }
 
     @GetMapping("/user")
@@ -133,6 +146,13 @@ public class AdminController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
         return adminService.getAllEmployee( user.getId());
+    }
+
+    @GetMapping("/list-user")
+    public List<User> getALlUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getByUsername(auth.getName());
+        return userService.getAllUser();
     }
 
 }

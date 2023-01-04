@@ -1,5 +1,6 @@
 package mii.mcc72.ams_server_app.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Report {
     @JoinColumn(name = "admin_id", referencedColumnName = "id")
     private Employee employee;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")

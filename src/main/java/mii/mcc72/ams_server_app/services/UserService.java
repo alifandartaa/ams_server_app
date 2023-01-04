@@ -5,8 +5,6 @@
 package mii.mcc72.ams_server_app.services;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -19,8 +17,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import mii.mcc72.ams_server_app.repos.UserRepository;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -50,6 +46,11 @@ public class UserService implements UserDetailsService {
 //                user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()));
 //                .orElseThrow(
 //                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", email)));
+    }
+    
+    //get all user 
+    public List<User> getAllUser(){
+        return userRepository.findAll();
     }
 
     public User getByUsername(String username) {

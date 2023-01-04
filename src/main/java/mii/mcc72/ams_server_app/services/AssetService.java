@@ -1,6 +1,7 @@
 package mii.mcc72.ams_server_app.services;
 
 import mii.mcc72.ams_server_app.models.Asset;
+import mii.mcc72.ams_server_app.models.Department;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
@@ -8,6 +9,7 @@ import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
 import lombok.AllArgsConstructor;
+import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,8 @@ import java.util.List;
 public class AssetService {
 
     private AssetRepo assetRepo;
+
+    private DepartmentRepo departmentRepo;
     private EmployeeService employeeService;
     private CategoryService categoryService;
 
@@ -55,14 +59,15 @@ public class AssetService {
 
     public AssetStatus getStatus() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))){
+        if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
 
-        return AssetStatus.PENDING_FINANCE;
-        }else{
+            return AssetStatus.PENDING_FINANCE;
+        } else {
             return AssetStatus.PENDING_ADMIN;
         }
     }
-    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@Valid AssetDTO assetDTO , int id, Errors errors) {
+
+    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@Valid AssetDTO assetDTO, int id, Errors errors) {
         if (assetRepo.existsAssetByName(assetDTO.getName())) {
             Asset targetAsset = assetRepo.findByName(assetDTO.getName()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset Name %s Not Found !!", assetDTO.getName()))
@@ -141,23 +146,32 @@ public class AssetService {
         return ResponseEntity.ok(responseData);
     }
 
-    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@Valid int id, ReviewAssetDTO reviewAssetDTO){
+    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@Valid int id, ReviewAssetDTO reviewAssetDTO) {
         ResponseData<Asset> responseData = new ResponseData<>();
-        responseData.setStatus(true);
         assetRepo.reviewSubmissionRequest(id, reviewAssetDTO.getAssetStatus());
+        responseData.setStatus(true);
         responseData.setPayload(getById(id));
-        //send email if approved before return
-        if(reviewAssetDTO.getAssetStatus().equals(AssetStatus.APPROVED)){
+        if (reviewAssetDTO.getAssetStatus().equals(AssetStatus.APPROVED)) {
+            responseData.setStatus(true);
+            responseData.setPayload(getById(id));
             Asset asset = getById(id);
-            Context ctx = new Context();
-            ctx.setVariable("asset_name", asset.getName());
-            ctx.setVariable("first_name", "Hi " + asset.getEmployee().getFirstName());
-            ctx.setVariable("rent_status", "Submission Request " + reviewAssetDTO.getAssetStatus());
-            ctx.setVariable("rent_list_link", "link");
-            String htmlContent = templateEngine.process("mailtrap_template", ctx);
-            emailSender.send(
-                    asset.getEmployee().getUser().getEmail(), "Your Submission Request Result",
-                    htmlContent);
+            Department department = asset.getEmployee().getDepartment();
+            if (department.getBalance() > asset.getPrice()) {
+                departmentRepo.calculateSubAssetWithBalance(asset.getPrice(), department.getId());
+                Context ctx = new Context();
+                ctx.setVariable("asset_name", asset.getName());
+                ctx.setVariable("first_name", "Hi " + asset.getEmployee().getFirstName());
+                ctx.setVariable("rent_status", "Submission Request " + reviewAssetDTO.getAssetStatus());
+                ctx.setVariable("rent_list_link", "link");
+                String htmlContent = templateEngine.process("mailtrap_template", ctx);
+//                emailSender.send(
+//                        asset.getEmployee().getUser().getEmail(), "Your Submission Request Result",
+//                        htmlContent);
+                return ResponseEntity.ok(responseData);
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
         return ResponseEntity.ok(responseData);
     }

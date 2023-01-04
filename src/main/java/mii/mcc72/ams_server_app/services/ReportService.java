@@ -50,7 +50,7 @@ public class ReportService {
         );
     }
 
-    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id, Errors errors){
+    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id,int adminId, Errors errors){
         historyRepo.reviewRentRequest(id, RentStatus.BROKEN);
         assetRepo.decreaseQtyAfterBroken(historyRepo.findById(id).get().getAsset().getId());
         getById(id);
@@ -68,7 +68,7 @@ public class ReportService {
         report.setId(id);
         Date dateAccident;
         try {
-            dateAccident = new SimpleDateFormat("dd/MM/yyyy").parse(reportDTO.getDateAccident());
+            dateAccident = new SimpleDateFormat("yyyy-MM-dd").parse(reportDTO.getDateAccident());
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -76,7 +76,7 @@ public class ReportService {
         report.setDescDamage(reportDTO.getDescDamage());
         report.setDescIncident(reportDTO.getDescIncident());
         report.setPenalty(reportDTO.getPenalty());
-        report.setEmployee(employeeService.getById(reportDTO.getAdminId()));
+        report.setEmployee(employeeService.getById(adminId));
         responseData.setPayload(reportRepo.save(report));
         Context ctx = new Context();
 //        ctx.setVariable("penalty", asset.getName());

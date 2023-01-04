@@ -63,9 +63,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonIgnore
+    
+//    @JsonIgnore
     private List<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;

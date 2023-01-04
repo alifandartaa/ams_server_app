@@ -30,5 +30,10 @@ public interface ReportRepo extends JpaRepository<Report, Integer> {
     @Query(value = "SELECT asset.name, asset.image_asset, asset.description , history.date_start , history.date_end, report.date_accident , report.desc_damage , report.desc_incident , report.penalty , report.id FROM report JOIN history ON report.id = history.id JOIN asset ON history.asset_id = asset.id WHERE report.id = ?1 AND report.penalty > 0 ORDER BY report.id", nativeQuery = true)
     List<Object> getById(int id);
 
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT employee.first_name , employee.last_name , asset.name , report.desc_damage , report.desc_incident , report.penalty , history.date_start , history.date_end , report.date_accident , report.id FROM report JOIN history ON report.id = history.id JOIN asset ON history.asset_id = asset.id JOIN employee ON history.employee_id = employee.id WHERE report.admin_id = ?1", nativeQuery = true)
+    List<Object> getReport(int id);
+//    SELECT employee.first_name , employee.last_name , asset.name , report.desc_damage , report.desc_incident , report.penalty , history.date_start , history.date_end , report.date_accident , report.id FROM report JOIN history ON report.id = history.id JOIN asset ON history.asset_id = asset.id JOIN employee ON history.employee_id = employee.id WHERE report.admin_id = 1;
 
 }
