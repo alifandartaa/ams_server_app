@@ -26,19 +26,19 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-//    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
     @PostMapping
     public String registerAsEmployee(@RequestBody RegistrationDTO request) {
         return registrationService.registerAsEmployee(request);
     }
 
 //    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
-    @PostMapping("admin")
-    public String registerAsAdmin(@RequestBody RegistrationDTO request) {
-        return registrationService.registerAsAdmin(request);
-    }
+//    @PostMapping("admin")
+//    public String registerAsAdmin(@RequestBody RegistrationDTO request) {
+//        return registrationService.registerAsAdmin(request);
+//    }
 
-//    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
     @PostMapping("finance")
     public String registerAsFinance(@RequestBody RegistrationDTO request) {
         return registrationService.registerAsFinance(request);

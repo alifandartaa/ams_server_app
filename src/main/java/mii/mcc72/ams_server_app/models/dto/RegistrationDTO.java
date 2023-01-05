@@ -16,6 +16,7 @@ public class RegistrationDTO {
     private String lastName;
     private String email;
     private String phoneNumber;
+    private int departmentId;
     private String username;
     private String password;
 }
