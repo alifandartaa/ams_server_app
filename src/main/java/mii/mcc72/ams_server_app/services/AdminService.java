@@ -42,7 +42,7 @@ public class AdminService {
     }
 
     public Asset getQty(int id) {
-        return assetRepo.findById(historyRepo.findById(id).get().getEmployee().getId()).get();
+        return assetRepo.findById(historyRepo.findById(id).get().getAsset().getId()).get();
     }
 
     public List<History> getReqRent(int department) {

@@ -52,7 +52,7 @@ public class ReportService {
 
     public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id,int adminId, Errors errors){
         historyRepo.reviewRentRequest(id, RentStatus.BROKEN);
-        assetRepo.decreaseQtyAfterBroken(historyRepo.findById(id).get().getAsset().getId());
+//        assetRepo.decreaseQtyAfterBroken(historyRepo.findById(id).get().getAsset().getId());
         getById(id);
         ResponseData<Report> responseData = new ResponseData<>();
         if(errors.hasErrors()){

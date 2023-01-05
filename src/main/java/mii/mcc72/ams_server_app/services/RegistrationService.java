@@ -16,8 +16,10 @@ import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import mii.mcc72.ams_server_app.utils.EmailSender;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -51,7 +53,7 @@ public class RegistrationService {
         employee.setLastName(registrationDTO.getLastName());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
         //should be input department
-        employee.setDepartment(departmentRepo.findById(3).get());
+        employee.setDepartment(departmentRepo.findById(registrationDTO.getDepartmentId()).get());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setPassword(registrationDTO.getPassword());
@@ -77,43 +79,43 @@ public class RegistrationService {
         return token;
     }
 
-    public String registerAsAdmin(RegistrationDTO registrationDTO) {
-        boolean isValidEmail = emailValidator.
-                test(registrationDTO.getEmail());
-
-        if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
-        }
-        Employee employee = new Employee();
-        employee.setFirstName(registrationDTO.getFirstName());
-        employee.setLastName(registrationDTO.getLastName());
-        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
-        //should be input department
-        employee.setDepartment(departmentRepo.findById(3).get());
-        User user = new User();
-        user.setUsername(registrationDTO.getUsername());
-        user.setPassword(registrationDTO.getPassword());
-        user.setEmail(registrationDTO.getEmail());
-        user.setEmployee(employee);
-        List<Role> role = new ArrayList<>();
-        role.add(roleService.getById(2));
-        user.setRoles(role);
-        String token = userService.signUpUser(user);
-
-        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
-        Context ctx = new Context();
-        ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
-        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
-        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
-        ctx.setVariable("confirmation_link", link);
-        String htmlContent = templateEngine.process("template_registration", ctx);
-        String subject = "Activate Your Admin Account";
-        emailSender.send(
-                registrationDTO.getEmail(), subject ,
-                htmlContent);
-
-        return token;
-    }
+//    public String registerAsAdmin(RegistrationDTO registrationDTO) {
+//        boolean isValidEmail = emailValidator.
+//                test(registrationDTO.getEmail());
+//
+//        if (!isValidEmail) {
+//            throw new IllegalStateException("email not valid");
+//        }
+//        Employee employee = new Employee();
+//        employee.setFirstName(registrationDTO.getFirstName());
+//        employee.setLastName(registrationDTO.getLastName());
+//        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+//        //should be input department
+//        employee.setDepartment(departmentRepo.findById(3).get());
+//        User user = new User();
+//        user.setUsername(registrationDTO.getUsername());
+//        user.setPassword(registrationDTO.getPassword());
+//        user.setEmail(registrationDTO.getEmail());
+//        user.setEmployee(employee);
+//        List<Role> role = new ArrayList<>();
+//        role.add(roleService.getById(2));
+//        user.setRoles(role);
+//        String token = userService.signUpUser(user);
+//
+//        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
+//        Context ctx = new Context();
+//        ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+//        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+//        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
+//        ctx.setVariable("confirmation_link", link);
+//        String htmlContent = templateEngine.process("template_registration", ctx);
+//        String subject = "Activate Your Admin Account";
+//        emailSender.send(
+//                registrationDTO.getEmail(), subject ,
+//                htmlContent);
+//
+//        return token;
+//    }
 
     public String registerAsFinance(RegistrationDTO registrationDTO) {
         boolean isValidEmail = emailValidator.
@@ -147,7 +149,6 @@ public class RegistrationService {
         emailSender.send(
                 registrationDTO.getEmail(), subject ,
                 htmlContent);
-
         return token;
     }
 
@@ -156,22 +157,23 @@ public class RegistrationService {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(()
-                        -> new IllegalStateException("token not found"));
+                        -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token Not Found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email Already Confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token Expired");
         }
 
         confirmationTokenService.setConfirmedAt(token);
         userService.enableUser(
                 confirmationToken.getUser().getUsername());
-        return "confirmed";
+        Context ctx = new Context();
+        return templateEngine.process("account_activated", ctx);
     }
 
 }
