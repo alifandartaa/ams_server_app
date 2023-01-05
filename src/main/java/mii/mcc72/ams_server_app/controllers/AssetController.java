@@ -33,43 +33,43 @@ public class AssetController {
 
 
     @GetMapping
-    public List<Asset> getAll(){
+    public List<Asset> getAll() {
         return assetService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Asset getById(@PathVariable("id") int id){
+    public Asset getById(@PathVariable("id") int id) {
         return assetService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@RequestBody AssetDTO asset , Errors errors){
-        Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<ResponseData<Asset>> createSubmissionAsset(@RequestBody AssetDTO asset, Errors errors) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
-        return assetService.createSubmissionAsset(asset ,user.getId(), errors);
+        return assetService.createSubmissionAsset(asset, user.getId(), errors);
     }
 
     @PreAuthorize("hasAuthority('UPDATE_FINANCE')")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Asset>> update(@PathVariable int id, @RequestBody AssetDTO asset , Errors errors){
-        return assetService.update(asset , id, errors);
+    public ResponseEntity<ResponseData<Asset>> update(@PathVariable int id, @RequestBody AssetDTO asset, Errors errors) {
+        return assetService.update(asset, id, errors);
     }
 
     @PreAuthorize("hasAnyAuthority('UPDATE_ADMIN','UPDATE_FINANCE')")
     @PostMapping("/review_asset/{id}")
-    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO){
+    public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO) {
         return assetService.reviewSubmissionRequest(id, reviewAssetDTO);
     }
 
     @PreAuthorize("hasAuthority('READ_FINANCE')")
     @GetMapping("recent_review")
-    public List<Asset> recentReviewAssetByFinance(){
+    public List<Asset> recentReviewAssetByFinance() {
         return assetService.getRecentReviewAsset();
     }
 
     @PreAuthorize("hasAuthority('DELETE_FINANCE')")
     @DeleteMapping("/{id}")
-    public Asset delete(@PathVariable int id){
+    public Asset delete(@PathVariable int id) {
         return assetService.delete(id);
     }
 }

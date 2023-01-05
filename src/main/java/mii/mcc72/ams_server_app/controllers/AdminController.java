@@ -155,11 +155,4 @@ public class AdminController {
         return userService.getAllUser();
     }
 
-    @GetMapping("/list-user")
-    public List<User> getALlUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.getByUsername(auth.getName());
-        return userService.getAllUser();
-    }
-
 }
