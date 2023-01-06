@@ -50,7 +50,7 @@ public class HistoryController {
 
     @PreAuthorize("hasAuthority('UPDATE_ADMIN')")
     @PostMapping("/review_rent/{id}")
-    public ResponseEntity<ResponseData<History>> reviewRentRequest(@PathVariable int id, @RequestBody ReviewRentDTO reviewRentDTO){
+    public ResponseEntity<ResponseData<History>> reviewRentRequest(@PathVariable int id, @RequestBody ReviewRentDTO reviewRentDTO) throws InterruptedException {
         return historyService.reviewRentRequest(id, reviewRentDTO);
     }
 

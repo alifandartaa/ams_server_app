@@ -72,9 +72,13 @@ public class RegistrationService {
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
         String subject = "Activate Your Employee Account";
-        emailSender.send(
-                registrationDTO.getEmail(), subject,
-                htmlContent);
+        try {
+            emailSender.send(
+                    registrationDTO.getEmail(), subject,
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         return token;
     }
@@ -146,9 +150,13 @@ public class RegistrationService {
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
         String subject = "Activate Your Finance Account";
-        emailSender.send(
-                registrationDTO.getEmail(), subject ,
-                htmlContent);
+        try {
+            emailSender.send(
+                    registrationDTO.getEmail(), subject ,
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return token;
     }
 

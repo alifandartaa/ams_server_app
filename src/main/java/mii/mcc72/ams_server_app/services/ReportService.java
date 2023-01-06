@@ -85,9 +85,13 @@ public class ReportService {
         ctx.setVariable("penalty_cost", report.getPenalty());
 //        ctx.setVariable("penalty_title", "link");
         String htmlContent = templateEngine.process("template_penalty", ctx);
-        emailSender.send(
-                history.getEmployee().getUser().getEmail(), "Penalty Rent Report",
-                htmlContent);
+        try {
+            emailSender.send(
+                    history.getEmployee().getUser().getEmail(), "Penalty Rent Report",
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok(responseData);
     }
 

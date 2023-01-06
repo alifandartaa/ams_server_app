@@ -118,7 +118,7 @@ public class HistoryService {
         return ResponseEntity.ok(responseData);
     }
 
-    public ResponseEntity<ResponseData<History>> reviewRentRequest(@Valid int id, ReviewRentDTO reviewRentDTO){
+    public ResponseEntity<ResponseData<History>> reviewRentRequest(@Valid int id, ReviewRentDTO reviewRentDTO) {
         ResponseData<History> responseData = new ResponseData<>();
         responseData.setStatus(true);
         History history = getById(id);
@@ -139,9 +139,13 @@ public class HistoryService {
         ctx.setVariable("rent_status", "Rent Request " + reviewRentDTO.getRentStatus());
         ctx.setVariable("rent_list_link", "link");
         String htmlContent = templateEngine.process("mailtrap_template", ctx);
-        emailSender.send(
-                history.getEmployee().getUser().getEmail(), "Your Rent Request Result",
-                htmlContent);
+        try {
+            emailSender.send(
+                    history.getEmployee().getUser().getEmail(), "Your Rent Request Result",
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok(responseData);
     }
 
