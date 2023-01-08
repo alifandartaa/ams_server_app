@@ -49,7 +49,7 @@ public class EmpController {
     public List<Asset> getSubmission() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
-        return empService.getAllAssetsByStatusAndEmpId(AssetStatus.PENDING_ADMIN, user.getId());
+        return empService.getAllAssetsByStatusAndEmpId( user.getId());
     }
 
     @GetMapping("/rent")

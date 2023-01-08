@@ -50,8 +50,8 @@ public class EmpService {
         return assetRepo.findAll().stream().filter(asset -> asset.getApprovedStatus().equals(status) && asset.getEmployee().getDepartment().getName() == department).collect(Collectors.toList());
     }
 
-    public List<Asset> getAllAssetsByStatusAndEmpId(AssetStatus status, int empId) {
-        return assetRepo.findAll().stream().filter(asset -> asset.getApprovedStatus().equals(status) && asset.getEmployee().getId() == empId).collect(Collectors.toList());
+    public List<Asset> getAllAssetsByStatusAndEmpId( int empId) {
+        return assetRepo.findAll().stream().filter(asset ->  asset.getEmployee().getId() == empId).collect(Collectors.toList());
     }
 
     public List<History> getAllHistoryByEmpId(int empId) {
