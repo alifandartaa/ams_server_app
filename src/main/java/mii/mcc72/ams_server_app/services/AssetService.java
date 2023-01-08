@@ -161,12 +161,16 @@ public class AssetService {
                 Context ctx = new Context();
                 ctx.setVariable("asset_name", asset.getName());
                 ctx.setVariable("first_name", "Hi " + asset.getEmployee().getFirstName());
-                ctx.setVariable("rent_status", "Submission Request " + reviewAssetDTO.getAssetStatus());
+                ctx.setVariable("rent_status", "Submission Request " + asset.getName() + " " + reviewAssetDTO.getAssetStatus());
                 ctx.setVariable("rent_list_link", "link");
                 String htmlContent = templateEngine.process("mailtrap_template", ctx);
-//                emailSender.send(
-//                        asset.getEmployee().getUser().getEmail(), "Your Submission Request Result",
-//                        htmlContent);
+                try {
+                    emailSender.send(
+                            asset.getEmployee().getUser().getEmail(), "Your Submission Request Result",
+                            htmlContent);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 return ResponseEntity.ok(responseData);
             }
             responseData.setStatus(false);

@@ -82,6 +82,7 @@ public class ReportService {
 //        ctx.setVariable("penalty", asset.getName());
         History history = historyRepo.findById(id).get();
         ctx.setVariable("first_name", "Hi " + history.getEmployee().getFirstName());
+        ctx.setVariable("asset_name", "You rent asset (" + history.getAsset().getName() + ") then its broken");
         ctx.setVariable("penalty_cost", report.getPenalty());
 //        ctx.setVariable("penalty_title", "link");
         String htmlContent = templateEngine.process("template_penalty", ctx);

@@ -56,7 +56,7 @@ public class AssetController {
     }
 
     @PreAuthorize("hasAnyAuthority('UPDATE_ADMIN','UPDATE_FINANCE')")
-    @PostMapping("/review_asset/{id}")
+    @PutMapping("/review_asset/{id}")
     public ResponseEntity<ResponseData<Asset>> reviewSubmissionRequest(@PathVariable int id, @RequestBody ReviewAssetDTO reviewAssetDTO) {
         return assetService.reviewSubmissionRequest(id, reviewAssetDTO);
     }

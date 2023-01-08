@@ -136,7 +136,7 @@ public class HistoryService {
         Context ctx = new Context();
         ctx.setVariable("asset_name", history.getAsset().getName());
         ctx.setVariable("first_name", "Hi " + history.getEmployee().getFirstName());
-        ctx.setVariable("rent_status", "Rent Request " + reviewRentDTO.getRentStatus());
+        ctx.setVariable("rent_status", "Rent Request " + history.getAsset().getName() + " " + reviewRentDTO.getRentStatus());
         ctx.setVariable("rent_list_link", "link");
         String htmlContent = templateEngine.process("mailtrap_template", ctx);
         try {
