@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/emp")
-@PreAuthorize("hasRole('EMPLOYEE')")
+@PreAuthorize("hasAnyRole('EMPLOYEE','ADMIN')")
 @AllArgsConstructor
 public class EmpController {
 
