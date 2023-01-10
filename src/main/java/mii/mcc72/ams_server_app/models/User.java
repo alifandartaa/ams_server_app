@@ -47,10 +47,8 @@ public class User {
     
     @Column(unique=true)
     private String email;
-
     private Boolean isEnabled = false;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
