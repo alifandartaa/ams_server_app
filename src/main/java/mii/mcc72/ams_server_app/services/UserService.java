@@ -93,8 +93,16 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
-    public int enableUser(String username) {
-        return userRepository.enableUser(username);
+    public User changeEnabled(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", id)));
+        if (user.getIsEnabled()) {
+            userRepository.disableUser(id);
+        } else {
+            userRepository.enableUser(id);
+        }
+        return user;
     }
 
 //    public List<GrantedAuthority> getAuthorities(List<Role> roles){

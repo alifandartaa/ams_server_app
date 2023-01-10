@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.*;
 import mii.mcc72.ams_server_app.services.EmpService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/v1/admin")
@@ -142,7 +137,7 @@ public class AdminController {
     }
 
     @GetMapping("/user")
-    public List<Employee> getAllEmployee() {
+    public List<User> getAllEmployee() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
         return adminService.getAllEmployee( user.getId());
@@ -155,4 +150,9 @@ public class AdminController {
         return userService.getAllUser();
     }
 
+    @PutMapping("/change-status/{id}")
+    public User changeStatus(@PathVariable int id) {
+
+        return userService.changeEnabled(id);
+    }
 }

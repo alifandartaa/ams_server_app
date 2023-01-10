@@ -5,10 +5,7 @@ import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
-import mii.mcc72.ams_server_app.repos.AssetRepo;
-import mii.mcc72.ams_server_app.repos.EmployeeRepo;
-import mii.mcc72.ams_server_app.repos.HistoryRepo;
-import mii.mcc72.ams_server_app.repos.ReportRepo;
+import mii.mcc72.ams_server_app.repos.*;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,7 @@ public class AdminService {
     private final EmployeeRepo employeeRepo;
     private final ReportRepo reportRepo;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public List<Asset> getSubmission(int empId) {
         return assetRepo.findAll().stream().filter(asset -> !asset.getApprovedStatus().equals(AssetStatus.PENDING_ADMIN) && asset.getEmployee().getId() == empId).collect(Collectors.toList());
@@ -65,12 +63,12 @@ public class AdminService {
         return historyRepo.findAll().stream().filter(history -> history.getStatus().equals(RentStatus.DONE) && history.getEmployee().getDepartment().getId() == department).collect(Collectors.toList());
     }
 
-    public List<Employee> getAllEmployee(int id) {
-        return employeeRepo.findAll().stream().filter(employee -> employee.getId() != id).collect(Collectors.toList());
+    public List<User> getAllEmployee(int id) {
+        return userRepository.findAll().stream().filter(employee -> employee.getId() != id).collect(Collectors.toList());
     }
 
-    public List<User> getAllUser() {
-        return userService.getAllUser();
-    }
+//    public List<User> getAllUser() {
+//        return userService.getAllUser();
+//    }
 
 }

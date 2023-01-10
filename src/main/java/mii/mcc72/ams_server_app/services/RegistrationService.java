@@ -15,6 +15,7 @@ import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.repos.DepartmentRepo;
+import mii.mcc72.ams_server_app.repos.UserRepository;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class RegistrationService {
     private final DepartmentRepo departmentRepo;
 
     private final TemplateEngine templateEngine;
+    private final UserRepository userRepository;
 
     public String registerAsEmployee(RegistrationDTO registrationDTO) {
         boolean isValidEmail = emailValidator.
@@ -178,10 +180,12 @@ public class RegistrationService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(
-                confirmationToken.getUser().getUsername());
+        userRepository.enableUser(
+                confirmationToken.getUser().getId());
         Context ctx = new Context();
         return templateEngine.process("account_activated", ctx);
     }
+
+
 
 }
