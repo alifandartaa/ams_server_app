@@ -57,7 +57,7 @@ public class Employee {
     @JoinColumn(name = "department")
     private Department department;
      
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "employee")
+    @OneToOne(mappedBy = "employee")
     @PrimaryKeyJoinColumn
     @JsonIgnore
     private User user;

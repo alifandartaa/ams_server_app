@@ -1,10 +1,15 @@
 package mii.mcc72.ams_server_app.utils;
 
+import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Department;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,9 +20,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ExcelHelper {
+
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = { "id", "first_name", "last_name", "phone_number", "email", "username", "password", "is_enabled" };
+    static String[] HEADERs = {"id", "first_name", "last_name", "phone_number", "email", "username", "password", "is_enabled"};
     static String SHEET = "Tutorials";
+
 
     //excel format
     public static boolean hasExcelFormat(MultipartFile file) {
@@ -51,27 +58,31 @@ public class ExcelHelper {
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
+                    DataFormatter df = new DataFormatter();
                     switch (cellIdx) {
                         case 0:
-                            employee.setId((int)currentCell.getNumericCellValue());
                             break;
 
                         case 1:
-                            employee.setFirstName(currentCell.getStringCellValue());
+                            employee.setFirstName(df.formatCellValue(currentCell));
                             break;
 
                         case 2:
-                            employee.setLastName(currentCell.getStringCellValue());
+                            employee.setLastName(df.formatCellValue(currentCell));
                             break;
 
                         case 3:
-                            employee.setPhoneNumber(String.valueOf(currentCell.getNumericCellValue()));
+//
+                            employee.setPhoneNumber(df.formatCellValue(currentCell));
                             break;
                         case 4:
-                            user.setUsername(currentCell.getStringCellValue());
+                            user.setEmail(df.formatCellValue(currentCell));
                             break;
                         case 5:
-                            user.setPassword(currentCell.getStringCellValue());
+                            user.setUsername(df.formatCellValue(currentCell));
+                            break;
+                        case 6:
+                            user.setPassword(df.formatCellValue(currentCell));
                             break;
                         default:
                             break;
