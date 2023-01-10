@@ -130,7 +130,7 @@ public class DataDummyGenerator implements CommandLineRunner {
         //Asset 2
         Asset asset2 = new Asset();
         asset2.setId(2);
-        asset2.setQty(1);
+        asset2.setQty(3);
         asset2.setName("Meeting Room");
         asset2.setDescription("sebagai tempat berkumpul, berdiskusi, rapat, untuk menentukan prioritas atau membuat tujuan, interview calon pekerja");
         asset2.setPrice(100000);
