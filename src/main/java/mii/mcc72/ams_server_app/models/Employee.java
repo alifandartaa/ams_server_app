@@ -57,7 +57,7 @@ public class Employee {
     @JoinColumn(name = "department")
     private Department department;
      
-    @OneToOne(mappedBy = "employee")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "employee")
     @PrimaryKeyJoinColumn
     @JsonIgnore
     private User user;
