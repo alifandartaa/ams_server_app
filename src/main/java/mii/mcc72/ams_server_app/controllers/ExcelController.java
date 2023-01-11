@@ -2,6 +2,7 @@ package mii.mcc72.ams_server_app.controllers;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.services.ExcelService;
 import mii.mcc72.ams_server_app.utils.ExcelHelper;
@@ -50,7 +51,7 @@ public class ExcelController {
     }
 
     @PostMapping("/regis-finance")
-    public ResponseEntity<ResponseData<List<User>>> registerFinanceFromExcel(@RequestBody List<User> users) {
-        return excelService.registerAllFinance(users);
+    public ResponseEntity<ResponseData<List<RegistrationDTO>>> registerFinanceFromExcel(@RequestBody List<RegistrationDTO> registrationDTOS) {
+        return excelService.registerAllFinance(registrationDTOS);
     }
 }

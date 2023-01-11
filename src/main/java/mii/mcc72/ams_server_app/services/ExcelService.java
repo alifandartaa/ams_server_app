@@ -3,6 +3,7 @@ package mii.mcc72.ams_server_app.services;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.User;
+import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.repos.EmployeeRepository;
 import mii.mcc72.ams_server_app.repos.UserRepository;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ExcelService {
     private EmployeeRepository employeeRepository;
     private UserRepository userRepository;
+    private RegistrationService registrationService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void registerFromExcel(MultipartFile file) {
@@ -37,15 +39,18 @@ public class ExcelService {
         }
     }
 
-    public ResponseEntity<ResponseData<List<User>>> registerAllFinance(List<User> users) {
-        ResponseData<List<User>> responseData = new ResponseData<>();
+    public ResponseEntity<ResponseData<List<RegistrationDTO>>> registerAllFinance(List<RegistrationDTO> registrationDTOS) {
+        ResponseData<List<RegistrationDTO>> responseData = new ResponseData<>();
         String message = "";
         message = "Uploaded the file successfully";
         responseData.setStatus(true);
         responseData.setMessages(Collections.singletonList(message));
-        responseData.setPayload(users);
-        System.out.println("Output Users BE : "+users);
-        userRepository.saveAll(users);
+        responseData.setPayload(registrationDTOS);
+        System.out.println("Output RegistrationDTOs BE : " + registrationDTOS);
+        for (RegistrationDTO registrationDTO : registrationDTOS) {
+            registrationService.registerAsFinance(registrationDTO);
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(responseData);
     }
 }
