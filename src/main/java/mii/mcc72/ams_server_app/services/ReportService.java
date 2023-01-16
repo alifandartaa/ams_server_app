@@ -1,7 +1,6 @@
 package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.ReportDTO;
@@ -29,33 +28,29 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class ReportService {
-    private ReportRepo reportRepo;
-    private HistoryRepo historyRepo;
-
-    private AssetRepo assetRepo;
-    private EmployeeService employeeService;
-
-    private AssetService assetService;
-
     private final TemplateEngine templateEngine;
     private final EmailSender emailSender;
+    private ReportRepo reportRepo;
+    private HistoryRepo historyRepo;
+    private AssetRepo assetRepo;
+    private EmployeeService employeeService;
+    private AssetService assetService;
 
-    public List<Report> getAll(){
+    public List<Report> getAll() {
         return reportRepo.findAll();
     }
 
-    public Report getById(int id){
+    public Report getById(int id) {
         return reportRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Report ID %s Not Found !!", id))
         );
     }
 
-    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id,int adminId, Errors errors){
+    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@Valid ReportDTO reportDTO, int id, int adminId, Errors errors) {
         historyRepo.reviewRentRequest(id, RentStatus.BROKEN);
-//        assetRepo.decreaseQtyAfterBroken(historyRepo.findById(id).get().getAsset().getId());
         getById(id);
         ResponseData<Report> responseData = new ResponseData<>();
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessages().add(error.getDefaultMessage());
             }
@@ -79,12 +74,10 @@ public class ReportService {
         report.setEmployee(employeeService.getById(adminId));
         responseData.setPayload(reportRepo.save(report));
         Context ctx = new Context();
-//        ctx.setVariable("penalty", asset.getName());
         History history = historyRepo.findById(id).get();
         ctx.setVariable("first_name", "Hi " + history.getEmployee().getFirstName());
         ctx.setVariable("asset_name", "You rent asset (" + history.getAsset().getName() + ") then its broken");
         ctx.setVariable("penalty_cost", report.getPenalty());
-//        ctx.setVariable("penalty_title", "link");
         String htmlContent = templateEngine.process("template_penalty", ctx);
         try {
             emailSender.send(
@@ -96,13 +89,7 @@ public class ReportService {
         return ResponseEntity.ok(responseData);
     }
 
-//    public void decreaseQtyAfterBroken(int id){
-//        Asset asset = historyRepo.findById(id).get().getAsset();
-//        asset.setQty(asset.getQty()-1);
-//        assetRepo.save(asset);
-//    }
-
-    public Report delete(int id){
+    public Report delete(int id) {
         Report report = getById(id);
         reportRepo.deleteById(id);
         return report;

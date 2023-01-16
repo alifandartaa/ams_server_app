@@ -2,11 +2,9 @@ package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
-import mii.mcc72.ams_server_app.models.Department;
 import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
-import mii.mcc72.ams_server_app.models.dto.PenaltyDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
 import mii.mcc72.ams_server_app.repos.HistoryRepo;
@@ -15,7 +13,6 @@ import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -25,7 +22,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,17 +37,18 @@ public class EmpService {
     private AssetService assetService;
 
     private EmployeeService employeeService;
+
     public List<Report> getPenalty(int id) {
-    return reportRepo.getPenalty(id).stream().filter(report -> report.getPenalty() > 0).collect(Collectors.toList());
+        return reportRepo.getPenalty(id).stream().filter(report -> report.getPenalty() > 0).collect(Collectors.toList());
     }
 
-    public List<Asset> getAllAssetsByStatus(AssetStatus status , String department) {
+    public List<Asset> getAllAssetsByStatus(AssetStatus status, String department) {
         System.out.println(department);
         return assetRepo.findAll().stream().filter(asset -> asset.getApprovedStatus().equals(status) && asset.getEmployee().getDepartment().getName() == department).collect(Collectors.toList());
     }
 
-    public List<Asset> getAllAssetsByStatusAndEmpId( int empId) {
-        return assetRepo.findAll().stream().filter(asset ->  asset.getEmployee().getId() == empId).collect(Collectors.toList());
+    public List<Asset> getAllAssetsByStatusAndEmpId(int empId) {
+        return assetRepo.findAll().stream().filter(asset -> asset.getEmployee().getId() == empId).collect(Collectors.toList());
     }
 
     public List<History> getAllHistoryByEmpId(int empId) {
@@ -61,11 +58,12 @@ public class EmpService {
     public List<Object> getListPenalty(int id) {
         return reportRepo.getListPenalty(id);
     }
+
     public Object getById(int id) {
         return reportRepo.getById(id);
     }
 
-    public ResponseEntity<ResponseData<History>> createRentRequest(@Valid HistoryDTO historyDTO,int id, Errors errors) {
+    public ResponseEntity<ResponseData<History>> createRentRequest(@Valid HistoryDTO historyDTO, int id, Errors errors) {
         ResponseData<History> responseData = new ResponseData<>();
         if (errors.hasErrors()) {
             for (ObjectError error : errors.getAllErrors()) {
@@ -102,6 +100,7 @@ public class EmpService {
         responseData.setPayload(historyRepo.save(history));
         return ResponseEntity.ok(responseData);
     }
+
     public List<Asset> getPendingFinanceAssets() {
         return assetRepo.getPendingFinanceAssets();
     }

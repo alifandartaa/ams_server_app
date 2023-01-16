@@ -6,7 +6,6 @@ import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.Report;
 import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.dto.HistoryDTO;
-import mii.mcc72.ams_server_app.models.dto.PenaltyDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.services.EmpService;
 import mii.mcc72.ams_server_app.services.UserService;
@@ -42,14 +41,14 @@ public class EmpController {
     public List<Asset> getAvailable() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
-        return empService.getAllAssetsByStatus(AssetStatus.APPROVED , user.getEmployee().getDepartment().getName());
+        return empService.getAllAssetsByStatus(AssetStatus.APPROVED, user.getEmployee().getDepartment().getName());
     }
 
     @GetMapping("/submission")
     public List<Asset> getSubmission() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
-        return empService.getAllAssetsByStatusAndEmpId( user.getId());
+        return empService.getAllAssetsByStatusAndEmpId(user.getId());
     }
 
     @GetMapping("/rent")
@@ -59,28 +58,29 @@ public class EmpController {
         return empService.getAllHistoryByEmpId(user.getId());
     }
 
-//    ListPenalty
+    //    ListPenalty
     @GetMapping("/listPenalty")
     public List<Object> getListPenalty() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
         return empService.getListPenalty(user.getId());
     }
+
     @GetMapping("/penalty/{id}")
     public Object getById(@PathVariable int id) {
         return empService.getById(id);
     }
 
     @PostMapping("/rentAsset")
-    public ResponseEntity<ResponseData<History>> rentAsset(@RequestBody HistoryDTO historyDTO , Errors errors) {
+    public ResponseEntity<ResponseData<History>> rentAsset(@RequestBody HistoryDTO historyDTO, Errors errors) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(authentication.getName());
-        return empService.createRentRequest(historyDTO , user.getId(), errors);
+        return empService.createRentRequest(historyDTO, user.getId(), errors);
     }
 
     @PreAuthorize("hasAuthority('READ_FINANCE')")
     @GetMapping("/assets_pending_finance")
-    public List<Asset> getAssetsPendingFinance(){
+    public List<Asset> getAssetsPendingFinance() {
         return empService.getPendingFinanceAssets();
     }
 

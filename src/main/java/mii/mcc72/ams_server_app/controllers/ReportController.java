@@ -25,29 +25,25 @@ public class ReportController {
     private UserService userService;
 
     @GetMapping
-    public List<Report> getAll(){
+    public List<Report> getAll() {
         return reportService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Report getById(@PathVariable("id") int id){
+    public Report getById(@PathVariable("id") int id) {
         return reportService.getById(id);
     }
 
-//    @PostMapping
-//    public ResponseEntity<ResponseData<Report>> create(@RequestBody ReportDTO reportDTO, Errors errors){
-//        return reportService.create(reportDTO, errors);
-//    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@PathVariable int id, @RequestBody ReportDTO reportDTO, Errors errors){
+    public ResponseEntity<ResponseData<Report>> updateExistingReportById(@PathVariable int id, @RequestBody ReportDTO reportDTO, Errors errors) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getByUsername(auth.getName());
         return reportService.updateExistingReportById(reportDTO, id, user.getId(), errors);
     }
 
     @DeleteMapping("/{id}")
-    public Report delete(@PathVariable int id){
+    public Report delete(@PathVariable int id) {
         return reportService.delete(id);
     }
 }

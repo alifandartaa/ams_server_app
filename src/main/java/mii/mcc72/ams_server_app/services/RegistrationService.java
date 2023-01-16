@@ -4,15 +4,11 @@
  */
 package mii.mcc72.ams_server_app.services;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
+import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
-import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import mii.mcc72.ams_server_app.repos.UserRepository;
@@ -23,6 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author bintang mada, Alif Andarta
@@ -54,7 +54,6 @@ public class RegistrationService {
         employee.setFirstName(registrationDTO.getFirstName());
         employee.setLastName(registrationDTO.getLastName());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
-        //should be input department
         employee.setDepartment(departmentRepo.findById(registrationDTO.getDepartmentId()).get());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
@@ -116,7 +115,7 @@ public class RegistrationService {
         String subject = "Activate Your Finance Account";
         try {
             emailSender.send(
-                    registrationDTO.getEmail(), subject ,
+                    registrationDTO.getEmail(), subject,
                     htmlContent);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
@@ -147,7 +146,6 @@ public class RegistrationService {
         Context ctx = new Context();
         return templateEngine.process("account_activated", ctx);
     }
-
 
 
 }

@@ -9,7 +9,6 @@ import mii.mcc72.ams_server_app.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,18 +17,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
- *
  * @author bintang mada, Alif Andarta
  */
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-private final UserService appUserService;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserService appUserService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private UserService userService;
-//    private PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -46,7 +43,6 @@ private final UserService appUserService;
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/registration/**").permitAll()
-//                .anyRequest().permitAll();
                 .anyRequest()
                 .authenticated().and()
                 .httpBasic();

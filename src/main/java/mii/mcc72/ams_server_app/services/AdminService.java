@@ -2,9 +2,8 @@ package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
-import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.History;
-import mii.mcc72.ams_server_app.models.Report;
+import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.repos.*;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.RentStatus;
@@ -13,19 +12,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import mii.mcc72.ams_server_app.models.User;
-
 @Service
 @AllArgsConstructor
 public class AdminService {
-    //
-    private AssetRepo assetRepo;
-    //
-    private HistoryRepo historyRepo;
     private final EmployeeRepo employeeRepo;
     private final ReportRepo reportRepo;
     private final UserService userService;
     private final UserRepository userRepository;
+    private AssetRepo assetRepo;
+    private HistoryRepo historyRepo;
 
     public List<Asset> getSubmission(int empId) {
         return assetRepo.findAll().stream().filter(asset -> !asset.getApprovedStatus().equals(AssetStatus.PENDING_ADMIN) && asset.getEmployee().getId() == empId).collect(Collectors.toList());
@@ -52,11 +47,7 @@ public class AdminService {
     }
 
     public List<Object> getReport(int id) {
-//        return reportRepo.findAll().stream().filter(report -> report.getEmployee().getId() == id).collect(Collectors.toList());
         return reportRepo.getReport(id);
-//        return historyRepo.findAll().stream().filter(history -> history.getReport().getEmployee().getId()==id).collect(Collectors.toList());
-//return reportRepo.findAllByEmployeeId(id).stream().map(report -> report.getHistory()).collect(Collectors.toList());
-//    return historyRepo.findAll().stream().filter(history -> history.getId() == reportRepo.findAllByEmployeeId(id).getId()).collect(Collectors.toList());
     }
 
     public List<History> getReqReturn(int department) {
@@ -66,9 +57,5 @@ public class AdminService {
     public List<User> getAllEmployee(int id) {
         return userRepository.findAll().stream().filter(employee -> employee.getId() != id).collect(Collectors.toList());
     }
-
-//    public List<User> getAllUser() {
-//        return userService.getAllUser();
-//    }
 
 }

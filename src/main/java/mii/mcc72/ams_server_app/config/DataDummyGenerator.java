@@ -80,16 +80,16 @@ public class DataDummyGenerator implements CommandLineRunner {
         privilegeRepository.insertRolePrivilege(3, 12);
 
         ArrayList<Department> listDepartment = new ArrayList<>();
-        Department departmentMarketing = new Department(1, "Marketing" , 50000000 , null);
+        Department departmentMarketing = new Department(1, "Marketing", 50000000, null);
         listDepartment.add(departmentMarketing);
-        Department departmentHR = new Department(2, "Human Resource" , 75000000 , null);
+        Department departmentHR = new Department(2, "Human Resource", 75000000, null);
         listDepartment.add(departmentHR);
-        Department departmentIT = new Department(3, "Information Technology" , 100000000 , null);
+        Department departmentIT = new Department(3, "Information Technology", 100000000, null);
         listDepartment.add(departmentIT);
         departmentRepo.saveAll(listDepartment);
 
         //Generate Account Admin
-        if(!userRepository.findByUsername("admin").isPresent()){
+        if (!userRepository.findByUsername("admin").isPresent()) {
             Employee employee = new Employee();
             employee.setFirstName("Admin");
             employee.setLastName("System");
@@ -145,8 +145,6 @@ public class DataDummyGenerator implements CommandLineRunner {
         listAsset.add(asset2);
 
         assetRepo.saveAll(listAsset);
-
-
 
 
     }

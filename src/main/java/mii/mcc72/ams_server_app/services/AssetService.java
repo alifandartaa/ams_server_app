@@ -1,14 +1,12 @@
 package mii.mcc72.ams_server_app.services;
 
+import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
 import mii.mcc72.ams_server_app.models.Department;
-import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
-import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.repos.AssetRepo;
-import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import mii.mcc72.ams_server_app.utils.AssetStatus;
 import mii.mcc72.ams_server_app.utils.EmailSender;
@@ -25,7 +23,6 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -34,14 +31,12 @@ import java.util.List;
 @AllArgsConstructor
 public class AssetService {
 
+    private final TemplateEngine templateEngine;
+    private final EmailSender emailSender;
     private AssetRepo assetRepo;
-
     private DepartmentRepo departmentRepo;
     private EmployeeService employeeService;
     private CategoryService categoryService;
-
-    private final TemplateEngine templateEngine;
-    private final EmailSender emailSender;
 
     public List<Asset> getAll() {
         return assetRepo.findAll();
@@ -72,7 +67,6 @@ public class AssetService {
             Asset targetAsset = assetRepo.findByName(assetDTO.getName()).orElseThrow(
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset Name %s Not Found !!", assetDTO.getName()))
             );
-//             update(assetDTO, targetAsset.getId(), errors);
         }
         ResponseData<Asset> responseData = new ResponseData<>();
         if (errors.hasErrors()) {
@@ -88,15 +82,6 @@ public class AssetService {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.format(date);
-//        try {
-////            date = new SimpleDateFormat("dd/MM/yyyy").parse(assetDTO.getDate());
-////            Date date = new Date();
-//        } catch (ParseException e) {
-//            responseData.setStatus(false);
-//            responseData.setPayload(null);
-//            responseData.setMessages(Collections.singletonList(e.getMessage()));
-//            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(responseData);
-//        }
         asset.setQty(assetDTO.getQty());
         asset.setName(assetDTO.getName());
         asset.setDescription(assetDTO.getDescription());
@@ -128,11 +113,6 @@ public class AssetService {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         formatter.format(date);
-//        try {
-//            date = new SimpleDateFormat("dd/MM/yyyy").parse(assetDTO.getDate());
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
         asset.setQty(assetDTO.getQty());
         asset.setName(assetDTO.getName());
         asset.setDescription(assetDTO.getDescription());

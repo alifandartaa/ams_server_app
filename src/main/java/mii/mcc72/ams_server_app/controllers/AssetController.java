@@ -3,16 +3,12 @@ package mii.mcc72.ams_server_app.controllers;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Asset;
-import mii.mcc72.ams_server_app.models.Employee;
-import mii.mcc72.ams_server_app.models.History;
 import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.models.dto.AssetDTO;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.ReviewAssetDTO;
-import mii.mcc72.ams_server_app.models.dto.ReviewRentDTO;
 import mii.mcc72.ams_server_app.services.AssetService;
 import mii.mcc72.ams_server_app.services.UserService;
-import mii.mcc72.ams_server_app.utils.RentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

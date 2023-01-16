@@ -2,9 +2,8 @@ package mii.mcc72.ams_server_app.services;
 
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.Privilege;
-import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.PrivilegeDTO;
-import mii.mcc72.ams_server_app.repos.PrivilegeRepo;
+import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.repos.PrivilegeRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +20,19 @@ import java.util.List;
 public class PrivilegeService {
     private PrivilegeRepo privilegeRepo;
 
-    public List<Privilege> getAll(){
+    public List<Privilege> getAll() {
         return privilegeRepo.findAll();
     }
 
-    public Privilege getById(int id){
+    public Privilege getById(int id) {
         return privilegeRepo.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Privilege ID %s Not Found !!", id))
         );
     }
 
-    public ResponseEntity<ResponseData<Privilege>> create(@Valid PrivilegeDTO privilegeDTO, Errors errors){
+    public ResponseEntity<ResponseData<Privilege>> create(@Valid PrivilegeDTO privilegeDTO, Errors errors) {
         ResponseData<Privilege> responseData = new ResponseData<>();
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessages().add(error.getDefaultMessage());
             }
@@ -48,10 +47,10 @@ public class PrivilegeService {
         return ResponseEntity.ok(responseData);
     }
 
-    public ResponseEntity<ResponseData<Privilege>> update(@Valid PrivilegeDTO privilegeDTO, int id, Errors errors){
+    public ResponseEntity<ResponseData<Privilege>> update(@Valid PrivilegeDTO privilegeDTO, int id, Errors errors) {
         getById(id);
         ResponseData<Privilege> responseData = new ResponseData<>();
-        if(errors.hasErrors()){
+        if (errors.hasErrors()) {
             for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessages().add(error.getDefaultMessage());
             }
@@ -67,7 +66,7 @@ public class PrivilegeService {
         return ResponseEntity.ok(responseData);
     }
 
-    public Privilege delete(int id){
+    public Privilege delete(int id) {
         Privilege privilege = getById(id);
         privilegeRepo.deleteById(id);
         return privilege;

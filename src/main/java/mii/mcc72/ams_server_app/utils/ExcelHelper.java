@@ -1,21 +1,13 @@
 package mii.mcc72.ams_server_app.utils;
 
-import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.Department;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.User;
-import mii.mcc72.ams_server_app.repos.DepartmentRepo;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.NumberToTextConverter;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,12 +18,8 @@ public class ExcelHelper {
     static String SHEET = "Tutorials";
 
 
-    //excel format
     public static boolean hasExcelFormat(MultipartFile file) {
-        if (!TYPE.equals(file.getContentType())) {
-            return false;
-        }
-        return true;
+        return TYPE.equals(file.getContentType());
     }
 
     public static List<User> excelToUsers(InputStream is) {
@@ -46,7 +34,6 @@ public class ExcelHelper {
             int rowNumber = 0;
             while (rows.hasNext()) {
                 org.apache.poi.ss.usermodel.Row currentRow = rows.next();
-                // skip header
                 if (rowNumber == 0) {
                     rowNumber++;
                     continue;
@@ -54,7 +41,6 @@ public class ExcelHelper {
                 Iterator<Cell> cellsInRow = currentRow.iterator();
                 Employee employee = new Employee();
                 User user = new User();
-//                Department department = new Department();
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
@@ -72,7 +58,6 @@ public class ExcelHelper {
                             break;
 
                         case 3:
-//
                             employee.setPhoneNumber(df.formatCellValue(currentCell));
                             break;
                         case 4:

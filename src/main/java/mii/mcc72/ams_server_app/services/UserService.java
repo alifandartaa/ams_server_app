@@ -4,23 +4,25 @@
  */
 package mii.mcc72.ams_server_app.services;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.*;
+import mii.mcc72.ams_server_app.models.ConfirmationToken;
+import mii.mcc72.ams_server_app.models.MyUser;
+import mii.mcc72.ams_server_app.models.User;
 import mii.mcc72.ams_server_app.repos.EmployeeRepository;
+import mii.mcc72.ams_server_app.repos.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import mii.mcc72.ams_server_app.repos.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 /**
- *
  * @author bintang mada
  */
 @Service
@@ -42,14 +44,9 @@ public class UserService implements UserDetailsService {
                         () -> new UsernameNotFoundException("User not found!!!")
                 );
         return new MyUser(user);
-//        return new org.springframework.security.core.userdetails.User(
-//                user.getUsername(), user.getPassword(), getAuthorities(user.getRoles()));
-//                .orElseThrow(
-//                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Asset ID %s Not Found !!", email)));
     }
-    
-    //get all user 
-    public List<User> getAllUser(){
+
+    public List<User> getAllUser() {
         return userRepository.findAll();
     }
 
@@ -65,16 +62,13 @@ public class UserService implements UserDetailsService {
                 .isPresent();
 
         if (userExists) {
-            // TODO check of attributes are the same and
-            // TODO if email not confirmed send confirmation email.
-
             throw new IllegalStateException("email already taken");
         }
 
         String encodedPassword = bCryptPasswordEncoder
                 .encode(user.getPassword());
 
-       user.setPassword(encodedPassword);
+        user.setPassword(encodedPassword);
         userRepository.save(user);
 
         String token = UUID.randomUUID().toString();
@@ -88,8 +82,6 @@ public class UserService implements UserDetailsService {
 
         confirmationTokenService.saveConfirmationToken(
                 confirmationToken);
-
-//        TODO: SEND EMAIL
         return token;
     }
 
@@ -104,12 +96,4 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
-
-//    public List<GrantedAuthority> getAuthorities(List<Role> roles){
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        for (Role role : roles) {
-//            authorities.add(new SimpleGrantedAuthority(role.getName()));
-//        }
-//        return authorities;
-//    }
 }

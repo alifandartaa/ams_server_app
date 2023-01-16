@@ -8,15 +8,9 @@ import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
 import mii.mcc72.ams_server_app.services.RegistrationService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
- *
  * @author bintang mada, Alif Andarta
  */
 @RestController
@@ -31,12 +25,6 @@ public class RegistrationController {
     public String registerAsEmployee(@RequestBody RegistrationDTO request) {
         return registrationService.registerAsEmployee(request);
     }
-
-//    @PreAuthorize("hasAuthority('CREATE_ADMIN')")
-//    @PostMapping("admin")
-//    public String registerAsAdmin(@RequestBody RegistrationDTO request) {
-//        return registrationService.registerAsAdmin(request);
-//    }
 
     @PreAuthorize("hasAuthority('CREATE_ADMIN')")
     @PostMapping("finance")
