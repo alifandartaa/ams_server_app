@@ -1,5 +1,6 @@
 # Asset Management System REST API
 A RESTful API example for asset management system using java spring boot (java 8) (project metrodata coding camp)
+ERD : https://drive.google.com/file/d/1Gvdgk9aRDYJH3ykpjahJKJMT21YdNOZO/view?usp=sharing
 
 # ams_server_app
 
