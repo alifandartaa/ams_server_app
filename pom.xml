@@ -11,7 +11,7 @@
     <groupId>mii.mcc72</groupId>
     <artifactId>ams_server_app</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ams_server_app-me</name>
+    <name>ams_server_app-bin</name>
     <description>Segmen 4 BE</description>
     <properties>
         <java.version>1.8</java.version>
@@ -67,6 +67,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
         </dependency>
     </dependencies>
 

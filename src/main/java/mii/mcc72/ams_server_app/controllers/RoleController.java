@@ -1,7 +1,6 @@
 package mii.mcc72.ams_server_app.controllers;
 
 import lombok.AllArgsConstructor;
-import mii.mcc72.ams_server_app.models.Privilege;
 import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.dto.ResponseData;
 import mii.mcc72.ams_server_app.models.dto.RoleDTO;
@@ -21,27 +20,27 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public List<Role> getAll(){
+    public List<Role> getAll() {
         return roleService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Role getById(@PathVariable("id") int id){
+    public Role getById(@PathVariable("id") int id) {
         return roleService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<Role>> create(@RequestBody RoleDTO roleDTO, Errors errors){
+    public ResponseEntity<ResponseData<Role>> create(@RequestBody RoleDTO roleDTO, Errors errors) {
         return roleService.create(roleDTO, errors);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Role>> update(@PathVariable int id, @RequestBody RoleDTO roleDTO, Errors errors){
+    public ResponseEntity<ResponseData<Role>> update(@PathVariable int id, @RequestBody RoleDTO roleDTO, Errors errors) {
         return roleService.update(roleDTO, id, errors);
     }
 
     @DeleteMapping("/{id}")
-    public Role delete(@PathVariable int id){
+    public Role delete(@PathVariable int id) {
         return roleService.delete(id);
     }
 }

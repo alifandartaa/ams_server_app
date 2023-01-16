@@ -4,21 +4,25 @@
  */
 package mii.mcc72.ams_server_app.services;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
+import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.Employee;
 import mii.mcc72.ams_server_app.models.Role;
 import mii.mcc72.ams_server_app.models.User;
-import mii.mcc72.ams_server_app.models.ConfirmationToken;
 import mii.mcc72.ams_server_app.models.dto.RegistrationDTO;
+import mii.mcc72.ams_server_app.repos.DepartmentRepo;
+import mii.mcc72.ams_server_app.repos.UserRepository;
 import mii.mcc72.ams_server_app.utils.EmailSender;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author bintang mada, Alif Andarta
@@ -34,7 +38,10 @@ public class RegistrationService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
 
+    private final DepartmentRepo departmentRepo;
+
     private final TemplateEngine templateEngine;
+    private final UserRepository userRepository;
 
     public String registerAsEmployee(RegistrationDTO registrationDTO) {
         boolean isValidEmail = emailValidator.
@@ -47,6 +54,7 @@ public class RegistrationService {
         employee.setFirstName(registrationDTO.getFirstName());
         employee.setLastName(registrationDTO.getLastName());
         employee.setPhoneNumber(registrationDTO.getPhoneNumber());
+        employee.setDepartment(departmentRepo.findById(registrationDTO.getDepartmentId()).get());
         User user = new User();
         user.setUsername(registrationDTO.getUsername());
         user.setPassword(registrationDTO.getPassword());
@@ -60,44 +68,18 @@ public class RegistrationService {
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         Context ctx = new Context();
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
-        emailSender.send(
-                registrationDTO.getEmail(),
-                htmlContent);
-
-        return token;
-    }
-
-    public String registerAsAdmin(RegistrationDTO registrationDTO) {
-        boolean isValidEmail = emailValidator.
-                test(registrationDTO.getEmail());
-
-        if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
+        String subject = "Activate Your Employee Account";
+        try {
+            emailSender.send(
+                    registrationDTO.getEmail(), subject,
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-        Employee employee = new Employee();
-        employee.setFirstName(registrationDTO.getFirstName());
-        employee.setLastName(registrationDTO.getLastName());
-        employee.setPhoneNumber(registrationDTO.getPhoneNumber());
-        User user = new User();
-        user.setUsername(registrationDTO.getUsername());
-        user.setPassword(registrationDTO.getPassword());
-        user.setEmail(registrationDTO.getEmail());
-        user.setEmployee(employee);
-        List<Role> role = new ArrayList<>();
-        role.add(roleService.getById(2));
-        user.setRoles(role);
-        String token = userService.signUpUser(user);
-
-        String link = "http://localhost:8088/api/registration/confirm?token=" + token;
-        Context ctx = new Context();
-        ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
-        ctx.setVariable("confirmation_link", link);
-        String htmlContent = templateEngine.process("template_registration", ctx);
-        emailSender.send(
-                registrationDTO.getEmail(),
-                htmlContent);
 
         return token;
     }
@@ -126,12 +108,18 @@ public class RegistrationService {
         String link = "http://localhost:8088/api/registration/confirm?token=" + token;
         Context ctx = new Context();
         ctx.setVariable("first_name", "Hi " + registrationDTO.getFirstName());
+        ctx.setVariable("username", "Username : " + registrationDTO.getUsername());
+        ctx.setVariable("password", "Password : " + registrationDTO.getPassword());
         ctx.setVariable("confirmation_link", link);
         String htmlContent = templateEngine.process("template_registration", ctx);
-        emailSender.send(
-                registrationDTO.getEmail(),
-                htmlContent);
-
+        String subject = "Activate Your Finance Account";
+        try {
+            emailSender.send(
+                    registrationDTO.getEmail(), subject,
+                    htmlContent);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return token;
     }
 
@@ -140,22 +128,24 @@ public class RegistrationService {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(()
-                        -> new IllegalStateException("token not found"));
+                        -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Token Not Found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Email Already Confirmed");
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token Expired");
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userService.enableUser(
-                confirmationToken.getUser().getUsername());
-        return "confirmed";
+        userRepository.enableUser(
+                confirmationToken.getUser().getId());
+        Context ctx = new Context();
+        return templateEngine.process("account_activated", ctx);
     }
+
 
 }

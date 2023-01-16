@@ -39,7 +39,7 @@ public class User {
     @Column(name = "id", length = 60)
     private int id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
@@ -47,10 +47,8 @@ public class User {
     
     @Column(unique=true)
     private String email;
-
     private Boolean isEnabled = false;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
@@ -63,9 +61,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    @JsonIgnore
+    
+//    @JsonIgnore
     private List<Role> roles;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Column(nullable = true)
     private List<ConfirmationToken> confirmationTokens;

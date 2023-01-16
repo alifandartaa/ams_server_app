@@ -14,33 +14,33 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/department")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','FINANCE')")
 @AllArgsConstructor
 public class DepartmentController {
     private DepartmentService departmentService;
 
     @GetMapping
-    public List<Department> getAll(){
+    public List<Department> getAll() {
         return departmentService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Department getById(@PathVariable("id") int id){
+    public Department getById(@PathVariable("id") int id) {
         return departmentService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseData<Department>> create(@RequestBody DepartmentDTO departmentDTO, Errors errors){
+    public ResponseEntity<ResponseData<Department>> create(@RequestBody DepartmentDTO departmentDTO, Errors errors) {
         return departmentService.create(departmentDTO, errors);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseData<Department>> update(@PathVariable int id, @RequestBody DepartmentDTO departmentDTO, Errors errors){
+    public ResponseEntity<ResponseData<Department>> update(@PathVariable int id, @RequestBody DepartmentDTO departmentDTO, Errors errors) {
         return departmentService.update(departmentDTO, id, errors);
     }
 
     @DeleteMapping("/{id}")
-    public Department delete(@PathVariable int id){
+    public Department delete(@PathVariable int id) {
         return departmentService.delete(id);
     }
 }

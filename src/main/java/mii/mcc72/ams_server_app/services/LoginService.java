@@ -18,19 +18,12 @@ public class LoginService {
     private AuthenticationManager authenticationManager;
 
     public Object login(LoginDTO loginDTO) {
-        UsernamePasswordAuthenticationToken authToken
-                = new UsernamePasswordAuthenticationToken(
-                loginDTO.getUsername(),
-                loginDTO.getPassword()
-        );
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
         Authentication auth = authenticationManager.authenticate(authToken);
-        SecurityContextHolder.getContext().setAuthentication(auth); // Set Principle
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        // Authoritiy, Username
         Map<String, Object> response = new HashMap<>();
-        response.put("authorities", auth.getAuthorities()
-                .stream().map(authority -> authority.getAuthority())
-                .collect(Collectors.toList()));
+        response.put("authorities", auth.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.toList()));
 
         return response;
     }

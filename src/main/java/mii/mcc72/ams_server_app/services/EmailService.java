@@ -11,6 +11,7 @@ import javax.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import mii.mcc72.ams_server_app.utils.EmailSender;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -31,13 +32,16 @@ public class EmailService implements EmailSender{
 
     @Override
     @Async
-    public void send(String to, String content) {
+    public void send(String to, String subject, String content) throws MailException, InterruptedException{
+            System.out.println("Sleeping now...");
+            Thread.sleep(10000);
+            System.out.println("Sending email...");
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(content, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
+            helper.setSubject(subject);
             helper.setFrom("mcc72java@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
