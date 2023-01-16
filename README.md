@@ -1,6 +1,7 @@
 # Asset Management System REST API
 A RESTful API example for asset management system using java spring boot (java 8) (project metrodata coding camp)
-ERD : https://drive.google.com/file/d/1Gvdgk9aRDYJH3ykpjahJKJMT21YdNOZO/view?usp=sharing
+
+<img src="https://user-images.githubusercontent.com/44419939/212777175-7dac4c3c-6bf5-4c4b-add5-f2f77dd0ead4.png" width="75%" height="50%">
 
 # ams_server_app
 
@@ -29,7 +30,7 @@ mvn spring-boot:run
 ## Structure
 ```
 ├── java-app
-│   ├── config //Configuration Web Security
+│   ├── config // Configuration Web Security
 │   ├── controllers // Our API core handlers
 │   ├── exceptions  // custom handling exceptions
 │   ├── models  // entity model
